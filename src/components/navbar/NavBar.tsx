@@ -1,9 +1,9 @@
-import useOpen from "../../hooks/useOpen";
-import AppsDropdown from "./AppsDropdown";
-import Logo from "./Logo";
-import NotificationDropdown from "./NotificationDropdown";
-import SearchBar from "./SearchBar";
-import UserDropdown from "./UserDropdown";
+import useOpen from "@/hooks/useOpen";
+import AppsDropdown from "@/components/navbar/AppsDropdown";
+import Logo from "@/components/navbar/Logo";
+import NotificationDropdown from "@/components/navbar/NotificationDropdown";
+import SearchBar from "@/components/navbar/SearchBar";
+import UserDropdown from "@/components/navbar/UserDropdown";
 
 export default function NavBar() {
   const { isOpen: isSidebarOpen, toggle: toggleSidebar } = useOpen();

@@ -1,5 +1,5 @@
 import React from "react";
-import useOpen from "../../hooks/useOpen";
+import useOpen from "@/hooks/useOpen";
 
 const NotificationDropdown: React.FC = () => {
   const { isOpen, toggle: toggleDropdown, ref } = useOpen();
@@ -24,14 +24,16 @@ const NotificationDropdown: React.FC = () => {
       </button>
       {isOpen && (
         <div
-          className="absolute right-0 z-50 mt-2 w-80 rounded divide-y divide-gray-100 shadow "
+          className="absolute right-0 mt-2 w-80 rounded divide-y divide-gray-100 shadow z-100"
           ref={ref}
         >
           <div className="block py-2 px-4 font-medium text-center text-gray-700 bg-gray-100 ">
             Notifications
           </div>
-          <Notification />
-          <Notification />
+          <div className="bg-white">
+            <Notification />
+            <Notification />
+          </div>
         </div>
       )}
     </div>

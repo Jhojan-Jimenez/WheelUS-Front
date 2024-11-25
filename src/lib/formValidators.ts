@@ -1,64 +1,48 @@
 import { z } from "zod";
 
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
+const requiredString = (message: string = "Este campo es obligatorio") =>
+  z.string().min(1, message);
+
 export const userLogSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Este campo es obligatorio")
+  email: requiredString()
     .email("Correo inválido")
     .regex(
       /@unisabana\.edu\.co$/,
       "Debe ser un correo institucional de la Universidad de la Sabana"
     ),
-  password: z
-    .string()
-    .min(6, "Debe contener por lo menos 6 caracteres")
-    .max(50, "No debe contener más de 50 caracteres")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>]+$/,
-      "Debe tener mayúsculas y minúsculas, un número y un carácter especial"
-    ),
+  password: requiredString(),
 });
 
-
 export const userRegSchema = z.object({
-  name: z
-    .string()
-    .min(1, "Este campo es obligatorio")
+  name: requiredString()
     .max(50, "No debe contener más de 50 caracteres")
     .regex(/^[a-zA-Z\s]+$/, "Debe contener solo letras")
     .trim(),
-  lastname: z
-    .string()
-    .min(1, "Este campo es obligatorio")
+  lastname: requiredString()
     .max(50, "No debe contener más de 50 caracteres")
     .regex(/^[a-zA-Z\s]+$/, "Debe contener solo letras")
     .trim(),
-  id: z
-    .string()
-    .length(6, "Debe contener 6 numeros")
-    .regex(/^\d{6}$/, "Debe contener solo numeros"),
-  email: z
-    .string()
-    .min(1, "Este campo es obligatorio")
+  id: requiredString("Debe contener 6 números")
+    .length(6, "Debe contener 6 números")
+    .regex(/^\d{6}$/, "Debe contener solo números"),
+  email: requiredString("Correo es obligatorio")
     .email("Correo inválido")
     .regex(
       /@unisabana\.edu\.co$/,
       "Debe ser un correo institucional de la Universidad de la Sabana"
     ),
-  password: z
-    .string()
+  password: requiredString()
     .min(6, "Debe contener por lo menos 6 caracteres")
     .max(50, "No debe contener más de 50 caracteres")
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>]+$/,
       "Debe tener mayúsculas y minúsculas, un número y un carácter especial"
     ),
-  contact: z
-    .string()
-    .min(1, "Este campo es obligatorio")
-    .regex(/^\d/, "Debe contener solo numeros")
-    .length(10, "Debe tener 10 dígitos"),
+  contact: requiredString("El contacto es obligatorio").regex(
+    /^\d{10}$/,
+    "Debe tener 10 dígitos y contener solo números"
+  ),
   photo: z
     .any()
     .optional()
@@ -73,32 +57,30 @@ export const userRegSchema = z.object({
       (fileList) =>
         !fileList ||
         fileList.length === 0 ||
-        ACCEPTED_IMAGE_TYPES.includes(fileList[0].type),
+        ["image/jpeg", "image/png", "image/jpg"].includes(fileList[0].type),
       {
         message: "La foto debe ser una imagen en formato (JPEG, PNG o JPG)",
       }
     ),
 });
+
 export const userModifySchema = z.object({
   name: z
     .string()
     .min(1, "Este campo es obligatorio")
     .max(50, "No debe contener más de 50 caracteres")
     .regex(/^[a-zA-Z\s]+$/, "Debe contener solo letras")
-    .trim()
-    .optional(),
+    .trim(),
   lastname: z
     .string()
     .min(1, "Este campo es obligatorio")
     .max(50, "No debe contener más de 50 caracteres")
     .regex(/^[a-zA-Z\s]+$/, "Debe contener solo letras")
-    .trim()
-    .optional(),
+    .trim(),
   contact: z
     .string()
     .regex(/^\d/, "Debe contener solo numeros")
-    .length(10, "Debe tener 10 dígitos")
-    .optional(),
+    .length(10, "Debe tener 10 dígitos"),
   photo: z
     .any()
     .optional()

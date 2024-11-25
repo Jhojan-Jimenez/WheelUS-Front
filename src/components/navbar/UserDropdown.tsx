@@ -1,5 +1,5 @@
 import React from "react";
-import useOpen from "../../hooks/useOpen";
+import useOpen from "@/hooks/useOpen";
 
 const UserDropdown: React.FC = () => {
   const { isOpen, toggle: toggleDropdown, ref } = useOpen();
@@ -21,7 +21,10 @@ const UserDropdown: React.FC = () => {
         />
       </button>
       {isOpen && (
-        <div className="absolute right-0 z-50 mt-2 w-56 bg-white rounded divide-y divide-gray-100 shadow " ref={ref}>
+        <div
+          className="absolute right-0 z-100 mt-2 w-56 bg-white rounded divide-y divide-gray-100 shadow "
+          ref={ref}
+        >
           <div className="py-3 px-4">
             <span className="block text-sm font-semibold text-gray-900 ">
               Neil sims
