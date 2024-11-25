@@ -1,5 +1,5 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
@@ -9,7 +9,7 @@ interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
 const Link: React.FC<LinkProps> = ({ href, children, ...props }) => {
   const navigate = useNavigate();
 
-  const isExternalLink = href.startsWith("http") || href.startsWith("//");
+  const isExternalLink = href.startsWith('http') || href.startsWith('//');
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (isExternalLink) {

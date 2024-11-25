@@ -1,8 +1,8 @@
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import Home from "@/components/pages/Home";
-import MainLayout from "@/components/layouts/MainLayout";
-import Register from "@/components/pages/Register";
-import Rides from "./components/pages/Rides";
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import Home from '@/components/pages/Home';
+import MainLayout from '@/components/layouts/MainLayout';
+import Register from '@/components/pages/Register';
+import Rides from './components/pages/Rides';
 
 function App() {
   return (

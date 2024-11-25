@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import Link from "@/components/ui/Link";
-import { userRegSchema } from "@/lib/formValidators";
-import { userRegData } from "@/lib/types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronLeft } from "lucide-react";
-import { useForm } from "react-hook-form";
+import Link from '@/components/ui/Link';
+import { userRegSchema } from '@/lib/formValidators';
+import { userRegData } from '@/lib/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ChevronLeft } from 'lucide-react';
+import { useForm } from 'react-hook-form';
 
 export default function Register() {
   // const router = useRouter();
@@ -83,13 +83,13 @@ export default function Register() {
           <input
             type="text"
             id="name"
-            {...register("name")}
+            {...register('name')}
             placeholder={`e.j: Pepito`}
             className="w-full px-3 py-2 border rounded-lg"
           />
-          {errors["name"] && (
+          {errors['name'] && (
             <p className="text-red-500 text-sm mt-1 error-text">
-              *{String(errors["name"]?.message)}
+              *{String(errors['name']?.message)}
             </p>
           )}
         </div>
@@ -103,47 +103,47 @@ export default function Register() {
           <input
             type="text"
             id="lastname"
-            {...register("lastname")}
+            {...register('lastname')}
             placeholder={`e.j: Perez`}
             className="w-full px-3 py-2 border rounded-lg "
           />
-          {errors["lastname"] && (
+          {errors['lastname'] && (
             <p className="text-red-500 text-sm mt-1 error-text">
-              *{String(errors["lastname"]?.message)}
+              *{String(errors['lastname']?.message)}
             </p>
           )}
         </div>
       </div>
-      {(["email", "id", "contact", "password"] as const).map((field) => (
+      {(['email', 'id', 'contact', 'password'] as const).map((field) => (
         <div key={field} className="mb-4">
           <label
             htmlFor={field}
             className="block text-gray-700 mb-2 capitalize"
           >
-            {field === "email"
-              ? "Email"
-              : field === "contact"
-              ? "Contacto"
-              : field === "id"
-              ? "Id"
-              : field === "password"
-              ? "Contraseña"
-              : ""}
+            {field === 'email'
+              ? 'Email'
+              : field === 'contact'
+                ? 'Contacto'
+                : field === 'id'
+                  ? 'Id'
+                  : field === 'password'
+                    ? 'Contraseña'
+                    : ''}
           </label>
           <input
             type="text"
             id={field}
             {...register(field)}
             placeholder={`e.j: ${
-              field === "email"
-                ? "ejemplo@unisabana.edu.co"
-                : field === "contact"
-                ? "3124567890"
-                : field === "id"
-                ? "123456"
-                : field === "password"
-                ? "P@ssWord_123"
-                : ""
+              field === 'email'
+                ? 'ejemplo@unisabana.edu.co'
+                : field === 'contact'
+                  ? '3124567890'
+                  : field === 'id'
+                    ? '123456'
+                    : field === 'password'
+                      ? 'P@ssWord_123'
+                      : ''
             }`}
             className="w-full px-3 py-2 border rounded-lg"
           />
@@ -158,7 +158,7 @@ export default function Register() {
         <input
           type="file"
           id="photo"
-          {...register("photo")}
+          {...register('photo')}
           accept="image/jpeg, image/png, image/gif"
           className="text-xs sm:text-base"
         />

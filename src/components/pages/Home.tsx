@@ -1,9 +1,9 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
-import ad from "/Ad_portas.jpg";
-import imgMaps from "/mapImg.webp";
-import Link from "@/components/ui/Link";
-import Login from "@/components/modals/Login";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import ad from '/Ad_portas.jpg';
+import imgMaps from '/mapImg.webp';
+import Link from '@/components/ui/Link';
+import Login from '@/components/modals/Login';
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
@@ -35,7 +35,7 @@ export default function Home() {
           <div className="flex items-center justify-center w-full px-6 py-8 lg:h-[32rem] lg:w-1/2">
             <div className="max-w-xl">
               <h2 className="text-3xl font-semibold text-gray-800  lg:text-4xl">
-                Conecta con tus compañeros y vive viajes{" "}
+                Conecta con tus compañeros y vive viajes{' '}
                 <span className="green-text">inolvidables</span>
               </h2>
 
@@ -55,7 +55,7 @@ export default function Home() {
                     Iniciar Sesión
                   </a>
                   <p className="min-w-60 text-base sm:text-lg text-center">
-                    ¿No tienes cuenta?{" "}
+                    ¿No tienes cuenta?{' '}
                     <Link href="/register" className="green-text">
                       Crea una
                     </Link>

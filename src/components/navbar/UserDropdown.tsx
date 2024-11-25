@@ -1,5 +1,5 @@
-import React from "react";
-import useOpen from "@/hooks/useOpen";
+import React from 'react';
+import useOpen from '@/hooks/useOpen';
 
 const UserDropdown: React.FC = () => {
   const { isOpen, toggle: toggleDropdown, ref } = useOpen();

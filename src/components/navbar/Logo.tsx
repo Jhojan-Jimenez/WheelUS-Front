@@ -1,5 +1,5 @@
-import React from "react";
-import Link from "@/components/ui/Link";
+import React from 'react';
+import Link from '@/components/ui/Link';
 
 const Logo: React.FC = () => {
   return (

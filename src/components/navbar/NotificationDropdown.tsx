@@ -1,5 +1,5 @@
-import React from "react";
-import useOpen from "@/hooks/useOpen";
+import React from 'react';
+import useOpen from '@/hooks/useOpen';
 
 const NotificationDropdown: React.FC = () => {
   const { isOpen, toggle: toggleDropdown, ref } = useOpen();
@@ -65,7 +65,7 @@ const Notification: React.FC = () => {
         </div>
         <div className="pl-3 w-full">
           <div className="text-gray-500 font-normal text-sm mb-1.5 ">
-            New message from{" "}
+            New message from{' '}
             <span className="font-semibold text-gray-900 ">Bonnie Green</span>:
             "Hey, what's up? All set for the presentation?"
           </div>
@@ -75,7 +75,7 @@ const Notification: React.FC = () => {
           </div>
         </div>
         <button
-          onClick={() => alert("Cerrar notificación")} // Aquí puedes agregar la lógica para cerrar
+          onClick={() => alert('Cerrar notificación')} // Aquí puedes agregar la lógica para cerrar
           className="relative top-0 right-0 text-gray-400 hover:text-gray-600 focus:outline-none"
         >
           <svg

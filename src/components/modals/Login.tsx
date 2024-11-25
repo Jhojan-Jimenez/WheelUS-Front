@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { ChevronLeft, Eye, EyeOff } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { userLogSchema } from "@/lib/formValidators";
-import { userLogData } from "@/lib/types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from 'react';
+import { ChevronLeft, Eye, EyeOff } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { userLogSchema } from '@/lib/formValidators';
+import { userLogData } from '@/lib/types';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export default function Login({ onClose }: { onClose: () => void }) {
   const {
@@ -13,7 +13,7 @@ export default function Login({ onClose }: { onClose: () => void }) {
   } = useForm<userLogData>({
     resolver: zodResolver(userLogSchema),
   });
-  const [typeInput, setInputType] = useState("password");
+  const [typeInput, setInputType] = useState('password');
   const onSubmit = async (data: userLogData) => {
     console.log(data);
 
@@ -79,14 +79,14 @@ export default function Login({ onClose }: { onClose: () => void }) {
               <input
                 type="text"
                 id="email"
-                {...register("email")}
+                {...register('email')}
                 name="email"
                 placeholder="ejemplo@unisabana.edu.co"
                 className="w-auto min-w-[250px] px-3 py-2 border rounded-lg"
               />
-              {errors["email"] && (
+              {errors['email'] && (
                 <p className="text-red-500 text-sm mt-1 error-text">
-                  *{String(errors["email"]?.message)}
+                  *{String(errors['email']?.message)}
                 </p>
               )}
             </div>
@@ -101,7 +101,7 @@ export default function Login({ onClose }: { onClose: () => void }) {
                 <input
                   type={typeInput}
                   id="password"
-                  {...register("password")}
+                  {...register('password')}
                   placeholder="ej: P@assWord_123"
                   className="w-full px-3 py-2"
                 />
@@ -109,17 +109,17 @@ export default function Login({ onClose }: { onClose: () => void }) {
                   type="button"
                   onClick={() =>
                     setInputType((prev) =>
-                      prev === "password" ? "text" : "password"
+                      prev === 'password' ? 'text' : 'password'
                     )
                   }
                   className="text-gray-400 hover:text-gray-800 border-l px-3"
                 >
-                  {typeInput === "password" ? <Eye /> : <EyeOff />}
+                  {typeInput === 'password' ? <Eye /> : <EyeOff />}
                 </button>
               </div>
-              {errors["password"] && (
+              {errors['password'] && (
                 <p className="text-red-500 text-sm mt-1 error-text">
-                  *{String(errors["password"]?.message)}
+                  *{String(errors['password']?.message)}
                 </p>
               )}
             </div>

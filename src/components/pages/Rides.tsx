@@ -1,4 +1,4 @@
-import RideCard from "../rides/RideCard";
+import RideCard from '../rides/RideCard';
 
 export default function Rides() {
   return (
@@ -7,37 +7,37 @@ export default function Rides() {
         imageSrc="/placeholder.svg?height=80&width=80"
         timestamp="Nov 29, 1:19 AM"
         spots={3}
-        onClick={() => console.log("Route clicked")}
+        onClick={() => console.log('Route clicked')}
       />
       <RideCard
         imageSrc="/placeholder.svg?height=80&width=80"
         timestamp="Nov 29, 1:19 AM"
         spots={3}
-        onClick={() => console.log("Route clicked")}
+        onClick={() => console.log('Route clicked')}
       />
       <RideCard
         imageSrc="/placeholder.svg?height=80&width=80"
         timestamp="Nov 29, 1:19 AM"
         spots={3}
-        onClick={() => console.log("Route clicked")}
+        onClick={() => console.log('Route clicked')}
       />
       <RideCard
         imageSrc="/placeholder.svg?height=80&width=80"
         timestamp="Nov 29, 1:19 AM"
         spots={3}
-        onClick={() => console.log("Route clicked")}
+        onClick={() => console.log('Route clicked')}
       />
       <RideCard
         imageSrc="/placeholder.svg?height=80&width=80"
         timestamp="Nov 29, 1:19 AM"
         spots={3}
-        onClick={() => console.log("Route clicked")}
+        onClick={() => console.log('Route clicked')}
       />
       <RideCard
         imageSrc="/placeholder.svg?height=80&width=80"
         timestamp="Nov 29, 1:19 AM"
         spots={3}
-        onClick={() => console.log("Route clicked")}
+        onClick={() => console.log('Route clicked')}
       />
     </div>
   );

@@ -6,7 +6,7 @@ export default function Prueba() {
           <div className="flex items-center justify-center w-full px-6 py-8 lg:h-[32rem] lg:w-1/2">
             <div className="max-w-xl">
               <h2 className="text-3xl font-semibold text-gray-800 dark:text-white lg:text-4xl">
-                Build Your New{" "}
+                Build Your New{' '}
                 <span className="text-blue-600 dark:text-blue-400">Idea</span>
               </h2>
 
@@ -39,7 +39,7 @@ export default function Prueba() {
               className="w-full h-full bg-cover"
               style={{
                 backgroundImage:
-                  "url(https://images.unsplash.com/photo-1508394522741-82ac9c15ba69?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=748&q=80)",
+                  'url(https://images.unsplash.com/photo-1508394522741-82ac9c15ba69?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=748&q=80)',
               }}
             >
               <div className="w-full h-full bg-black opacity-25"></div>
