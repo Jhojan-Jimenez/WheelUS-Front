@@ -8,9 +8,10 @@ import Link from '../ui/Link';
 // import { useLoading } from '@/hooks/useLoading';
 import { userModifySchema } from '@/lib/formValidators';
 import { userModifyData } from '@/lib/types';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function EditProfile() {
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
   //   const navigate = useNavigate();
   //   const { setLoading } = useLoading();
   const {
