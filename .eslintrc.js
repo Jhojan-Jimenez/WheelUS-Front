@@ -10,7 +10,7 @@ module.exports = {
   },
   settings: {
     react: {
-      version: 'detect', // Detecta automáticamente la versión de React
+      version: 'detect',
     },
   },
   env: {
@@ -21,7 +21,7 @@ module.exports = {
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended', // Asegúrate de que 'eslint-plugin-prettier' esté instalado
+    'plugin:prettier/recommended',
   ],
   plugins: [
     'react',
@@ -38,7 +38,6 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    // Puedes agregar más reglas personalizadas aquí
   },
-  ignorePatterns: ['dist'], // Ignora la carpeta dist
+  ignorePatterns: ['dist'],
 };

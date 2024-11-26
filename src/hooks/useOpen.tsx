@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-function useOpen() {
+export function useOpen() {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -28,5 +28,3 @@ function useOpen() {
 
   return { isOpen, toggle, open, close, ref };
 }
-
-export default useOpen;

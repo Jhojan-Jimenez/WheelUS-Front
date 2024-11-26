@@ -1,16 +1,22 @@
 'use client';
 
 import Link from '@/components/ui/Link';
+import { useAuth } from '@/hooks/useAuth';
+import { useLoading } from '@/hooks/useLoading';
 import { userRegSchema } from '@/lib/formValidators';
 import { userRegData } from '@/lib/types';
+import { normalizeValidationBackErrors } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { isAxiosError } from 'axios';
 import { ChevronLeft } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 export default function Register() {
-  // const router = useRouter();
-  // const { signup } = useAuth();
-  // const { setLoading } = useLoading();
+  const navigate = useNavigate();
+  const { signup } = useAuth();
+  const { setLoading } = useLoading();
 
   const {
     register,
@@ -19,51 +25,41 @@ export default function Register() {
   } = useForm<userRegData>({
     resolver: zodResolver(userRegSchema),
   });
-  // const errorsMes = (err) => {
-  //   let errorMessage;
-  //   for (const field in err) {
-  //     if (err[field]._errors) {
-  //       const fieldErrors = err[field]._errors.join(", ");
-  //       errorMessage += `\n${field}: ${fieldErrors}`;
-  //     }
-  //   }
-  //   return errorMessage;
-  // };
 
   const onSubmit = async (data: userRegData) => {
-    console.log(data);
+    setLoading(true);
+    try {
+      await signup(data);
+      Swal.fire({
+        title: 'Excelente!',
+        text: 'Usuario Registrado Correctamente',
+        icon: 'success',
+      });
+      navigate('/rides');
+    } catch (error) {
+      let validateErros = '';
+      if (isAxiosError(error) && error.response?.data?.errors) {
+        validateErros = normalizeValidationBackErrors(
+          error.response.data.errors
+        );
+      }
 
-    // setLoading(true);
-    // try {
-    //   await signup(data);
-    //   Swal.fire({
-    //     title: "Excelente!",
-    //     text: "Usuario Registrado Correctamente",
-    //     icon: "success",
-    //   });
-    //   router.push("/dashboard");
-    // } catch (error) {
-    //   let validateErros = "";
-    //   if (error.response.data.errors) {
-    //     validateErros = errorsMes(error.response.data.errors);
-    //   }
-
-    //   if (isAxiosError(error)) {
-    //     Swal.fire({
-    //       title: "Error!",
-    //       text: `${error.response.data.message} ${validateErros}`,
-    //       icon: "error",
-    //     });
-    //   } else {
-    //     Swal.fire({
-    //       title: "Error!",
-    //       text: "Error del servidor",
-    //       icon: "error",
-    //     });
-    //   }
-    // } finally {
-    //   setLoading(false);
-    // }
+      if (isAxiosError(error)) {
+        Swal.fire({
+          title: 'Error!',
+          text: `${error.response?.data?.message || 'Unknown error'} ${validateErros}`,
+          icon: 'error',
+        });
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Error del servidor',
+          icon: 'error',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

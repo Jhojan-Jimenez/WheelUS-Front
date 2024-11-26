@@ -63,58 +63,26 @@ export const userRegSchema = z.object({
       }
     ),
 });
+export const userModifySchema = userRegSchema
+  .pick({
+    name: true,
+    lastname: true,
+    contact: true,
+    photo: true,
+  })
+  .partial();
 
-export const userModifySchema = z.object({
-  name: z
-    .string()
-    .min(1, 'Este campo es obligatorio')
-    .max(50, 'No debe contener más de 50 caracteres')
-    .regex(/^[a-zA-Z\s]+$/, 'Debe contener solo letras')
-    .trim(),
-  lastname: z
-    .string()
-    .min(1, 'Este campo es obligatorio')
-    .max(50, 'No debe contener más de 50 caracteres')
-    .regex(/^[a-zA-Z\s]+$/, 'Debe contener solo letras')
-    .trim(),
-  contact: z
-    .string()
-    .regex(/^\d/, 'Debe contener solo numeros')
-    .length(10, 'Debe tener 10 dígitos'),
-  photo: z
-    .any()
-    .optional()
-    .refine(
-      (fileList) =>
-        !fileList || fileList.length === 0 || fileList[0].size <= 4194304,
-      {
-        message: 'La foto no debe pesar más de 4MB',
-      }
-    )
-    .refine(
-      (fileList) =>
-        !fileList ||
-        fileList.length === 0 ||
-        ACCEPTED_IMAGE_TYPES.includes(fileList[0].type),
-      {
-        message: 'La foto debe ser una imagen en formato (JPEG, PNG o GIF)',
-      }
-    ),
-});
-export const vehicleSchema = z.object({
-  plate: z
-    .string()
+export const vehicleRegSchema = z.object({
+  plate: requiredString()
     .regex(
       /^([A-Z]{3})(\d{3})$/,
       'Debe contener 3 letras mayúsculas y 3 Numeros'
     )
-    .min(1, 'Este campo es obligatorio')
+
     .max(6, 'Solo debe tener 3 letras y 3 números'),
-  brand: z.string().min(1, 'Este campo es obligatorio'),
-  model: z.string().min(1, 'Este campo es obligatorio'),
-  seats: z
-    .string()
-    .min(1, 'Este campo es obligatorio')
+  brand: requiredString(),
+  model: requiredString(),
+  seats: requiredString()
     .regex(/^[2-6]$/, 'Debe transportar de 2 a 6 pasajeros')
     .transform((val) => Number(val)),
   soat: z
@@ -155,7 +123,7 @@ export const vehicleSchema = z.object({
     ),
 });
 
-export const partialVehicleSchema = vehicleSchema
+export const vehicleModifySchema = vehicleRegSchema
   .pick({
     brand: true,
     model: true,
@@ -164,37 +132,37 @@ export const partialVehicleSchema = vehicleSchema
   })
   .partial();
 
-export const rideSchema = z.object({
-  vehicle_plate: z.string().min(1, 'La placa del vehículo es obligatoria'),
-  available_seats: z.coerce
-    .number({ message: 'Los asientos disponibles deben ser un número' })
-    .min(1, 'La cantidad mínima de asientos disponibles es 1'),
+// export const rideSchema = z.object({
+//   vehicle_plate: z.string().min(1, 'La placa del vehículo es obligatoria'),
+//   available_seats: z.coerce
+//     .number({ message: 'Los asientos disponibles deben ser un número' })
+//     .min(1, 'La cantidad mínima de asientos disponibles es 1'),
 
-  departure: z.coerce.date({ message: 'La fecha no es válida' }).refine(
-    (date) => {
-      const allowedTime = new Date();
-      allowedTime.setHours(allowedTime.getHours() + 1);
-      allowedTime.setSeconds(0);
-      allowedTime.setMinutes(allowedTime.getMinutes() - 2);
-      return date.getTime() >= allowedTime.getTime();
-    },
-    { message: 'La reserva debe ser al menos una hora adelante' }
-  ),
+//   departure: z.coerce.date({ message: 'La fecha no es válida' }).refine(
+//     (date) => {
+//       const allowedTime = new Date();
+//       allowedTime.setHours(allowedTime.getHours() + 1);
+//       allowedTime.setSeconds(0);
+//       allowedTime.setMinutes(allowedTime.getMinutes() - 2);
+//       return date.getTime() >= allowedTime.getTime();
+//     },
+//     { message: 'La reserva debe ser al menos una hora adelante' }
+//   ),
 
-  destination: z
-    .string()
-    .min(1, 'El destino es obligatorio y debe tener al menos un carácter'),
+//   destination: z
+//     .string()
+//     .min(1, 'El destino es obligatorio y debe tener al menos un carácter'),
 
-  fee: z.coerce
-    .number({ message: 'La tarifa debe ser un número' })
-    .positive({ message: 'La tarifa debe ser un valor positivo' }),
+//   fee: z.coerce
+//     .number({ message: 'La tarifa debe ser un número' })
+//     .positive({ message: 'La tarifa debe ser un valor positivo' }),
 
-  origin: z
-    .string()
-    .min(1, 'El origen es obligatorio y debe tener al menos un carácter'),
+//   origin: z
+//     .string()
+//     .min(1, 'El origen es obligatorio y debe tener al menos un carácter'),
 
-  route: z.array(z.string()).min(2, 'La ruta debe tener al menos dos paradas'),
-});
+//   route: z.array(z.string()).min(2, 'La ruta debe tener al menos dos paradas'),
+// });
 
 // export const partialRideSchema = rideSchema.pick({
 //   vehicle_plate: true,

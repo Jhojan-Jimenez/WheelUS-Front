@@ -4,6 +4,8 @@ interface RideCardProps {
   imageSrc: string;
   timestamp: string;
   spots: number;
+  startPoint: string;
+  endPoint: string;
   onClick?: () => void;
 }
 
@@ -11,12 +13,13 @@ const RideCard: React.FC<RideCardProps> = ({
   imageSrc,
   timestamp,
   spots,
+  startPoint,
+  endPoint,
   onClick,
 }) => {
   return (
-    <div className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-100">
-      <div className="flex items-center p-2 gap-3">
-        {/* Image Container */}
+    <div className="w-full bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+      <div className="flex items-center p-4 gap-4">
         <div className="relative w-20 h-20 flex-shrink-0">
           <img
             src={imageSrc}
@@ -24,8 +27,6 @@ const RideCard: React.FC<RideCardProps> = ({
             className="w-full h-full object-cover rounded-lg shadow-md"
           />
         </div>
-
-        {/* Content Container */}
         <div className="flex-grow space-y-2">
           <button
             onClick={onClick}
@@ -46,7 +47,6 @@ const RideCard: React.FC<RideCardProps> = ({
               />
             </svg>
           </button>
-
           <div className="flex items-center gap-2 text-gray-600">
             <svg
               className="w-4 h-4"
@@ -63,7 +63,6 @@ const RideCard: React.FC<RideCardProps> = ({
             </svg>
             <span className="text-sm">{timestamp}</span>
           </div>
-
           <div className="flex items-center gap-2 text-gray-600">
             <svg
               className="w-4 h-4"
@@ -80,23 +79,30 @@ const RideCard: React.FC<RideCardProps> = ({
             </svg>
             <span className="text-sm">{spots} cupos</span>
           </div>
-        </div>
-
-        {/* Right Section */}
-        <div className="w-16 self-stretch flex items-center justify-center bg-emerald-500 text-white">
-          <svg
-            className="w-8 h-8"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-            />
-          </svg>
+          <div className="flex items-center gap-2 text-gray-600">
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            <span className="text-sm">
+              {startPoint} → {endPoint}
+            </span>
+          </div>
         </div>
       </div>
     </div>

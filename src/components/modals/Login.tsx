@@ -4,6 +4,11 @@ import { useForm } from 'react-hook-form';
 import { userLogSchema } from '@/lib/formValidators';
 import { userLogData } from '@/lib/types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useLoading } from '@/hooks/useLoading';
+import { useAuth } from '@/hooks/useAuth';
+import Swal from 'sweetalert2';
+import { isAxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login({ onClose }: { onClose: () => void }) {
   const {
@@ -13,41 +18,38 @@ export default function Login({ onClose }: { onClose: () => void }) {
   } = useForm<userLogData>({
     resolver: zodResolver(userLogSchema),
   });
+  const { signin } = useAuth();
+  const { setLoading } = useLoading();
+  const navigate = useNavigate();
   const [typeInput, setInputType] = useState('password');
   const onSubmit = async (data: userLogData) => {
-    console.log(data);
-
-    // setLoading(true);
-    // event.preventDefault();
-    // const formData = new FormData(event.target);
-    // const email = formData.get("email");
-    // const password = formData.get("password");
-    // try {
-    //   await signin(email, password);
-    //   Swal.fire({
-    //     title: "Excelente!",
-    //     text: "Has iniciado sesión correctamente",
-    //     icon: "success",
-    //   }).then(() => {
-    //     router.push("/dashboard");
-    //   });
-    // } catch (error) {
-    //   if (isAxiosError(error)) {
-    //     Swal.fire({
-    //       title: "Error!",
-    //       text: error.response.data.message,
-    //       icon: "error",
-    //     });
-    //   } else {
-    //     Swal.fire({
-    //       title: "Error!",
-    //       text: "Error del servidor",
-    //       icon: "error",
-    //     });
-    //   }
-    // } finally {
-    //   setLoading(false);
-    // }
+    setLoading(true);
+    try {
+      await signin(data);
+      Swal.fire({
+        title: 'Excelente!',
+        text: 'Has iniciado sesión correctamente',
+        icon: 'success',
+      }).then(() => {
+        navigate('/rides');
+      });
+    } catch (error) {
+      if (isAxiosError(error)) {
+        Swal.fire({
+          title: 'Error!',
+          text: error.response?.data?.message || 'Error desconocido',
+          icon: 'error',
+        });
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Error del servidor',
+          icon: 'error',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div
@@ -64,12 +66,15 @@ export default function Login({ onClose }: { onClose: () => void }) {
         >
           <button
             className="text-gray-400 hover:text-gray-800 flex py-3 px-1 border-none"
-            onClick={onClose}
+            onClick={(e) => {
+              e.preventDefault();
+              onClose();
+            }}
           >
             <ChevronLeft /> Volver
           </button>
-          <section className="p-4 w-auto flex flex-col gap-4">
-            <div className="w-auto">
+          <section className="p-4 w-full flex flex-col gap-4">
+            <div className="w-full">
               <label
                 htmlFor="email"
                 className="block text-gray-700 mb-2 capitalize"
@@ -82,7 +87,7 @@ export default function Login({ onClose }: { onClose: () => void }) {
                 {...register('email')}
                 name="email"
                 placeholder="ejemplo@unisabana.edu.co"
-                className="w-auto min-w-[250px] px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border rounded-lg"
               />
               {errors['email'] && (
                 <p className="text-red-500 text-sm mt-1 error-text">
@@ -90,7 +95,7 @@ export default function Login({ onClose }: { onClose: () => void }) {
                 </p>
               )}
             </div>
-            <div className="w-auto">
+            <div className="w-full">
               <label
                 htmlFor="password"
                 className="block text-gray-700 mb-2 capitalize"

@@ -4,8 +4,12 @@ import ad from '/Ad_portas.jpg';
 import imgMaps from '/mapImg.webp';
 import Link from '@/components/ui/Link';
 import Login from '@/components/modals/Login';
+import { useAuth } from '@/hooks/useAuth';
+import Cookies from 'js-cookie';
+import Swal from 'sweetalert2';
 
 export default function Home() {
+  const { refreshUser } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -25,6 +29,29 @@ export default function Home() {
 
   const handleClose = () => {
     setShowModal(false);
+  };
+  const handleSignIn = async () => {
+    const token = Cookies.get('refreshToken');
+    if (token) {
+      const result = await Swal.fire({
+        title: '¿Quieres refrescar tu sesión?',
+        text: 'Actualmente tienes una sesión ¿Deseas continuar con tu sesión anterior?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, refrescar sesión',
+        cancelButtonText: 'No, iniciar nueva sesión',
+      });
+
+      if (result.isConfirmed) {
+        await refreshUser();
+        return;
+      } else {
+        Cookies.remove('refreshToken');
+        setShowModal(true);
+        return;
+      }
+    }
+    setShowModal(true);
   };
 
   return (
@@ -48,9 +75,7 @@ export default function Home() {
                   <a
                     href="#"
                     className="block px-5 py-2 text-sm font-medium tracking-wider text-center text-white transition-colors duration-300 transform bg-gray-900 rounded-md hover:bg-gray-700 green"
-                    onClick={() => {
-                      setShowModal(true);
-                    }}
+                    onClick={handleSignIn}
                   >
                     Iniciar Sesión
                   </a>
@@ -65,7 +90,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative w-full h-96 lg:w-1/2 lg:h-auto p-4">
+          <div className="relative w-full h-96 lg:w-1/2 lg:h-auto p-4 z-0">
             <div
               className="w-full h-full bg-cover rounded-lg"
               style={{
@@ -76,14 +101,14 @@ export default function Home() {
             </div>
             <button
               onClick={handlePrev}
-              className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full hover:bg-gray-700"
+              className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full hover:bg-gray-700 z-10"
               aria-label="Previous"
             >
               <ChevronLeft />
             </button>
             <button
               onClick={handleNext}
-              className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full hover:bg-gray-700"
+              className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full hover:bg-gray-700 z-10"
               aria-label="Next"
             >
               <ChevronRight />
