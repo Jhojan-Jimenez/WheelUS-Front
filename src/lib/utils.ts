@@ -1,4 +1,5 @@
 import { AxiosError } from 'axios';
+import { format } from 'date-fns';
 
 export const normalizeValidationBackErrors = (err: AxiosError): string => {
   let errorMessage = 'Ocurrió un error:';
@@ -17,4 +18,8 @@ export const normalizeValidationBackErrors = (err: AxiosError): string => {
   }
 
   return errorMessage;
+};
+
+export const formatDateFront = (date: string | number | Date): string => {
+  return format(new Date(date), 'dd/MM/yyyy');
 };

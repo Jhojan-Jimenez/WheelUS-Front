@@ -1,3 +1,4 @@
+import { formatDateFront } from '@/lib/utils';
 import React from 'react';
 
 interface RideCardProps {
@@ -61,7 +62,7 @@ const RideCard: React.FC<RideCardProps> = ({
                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span className="text-sm">{timestamp}</span>
+            <span className="text-sm">{formatDateFront(timestamp)}</span>
           </div>
           <div className="flex items-center gap-2 text-gray-600">
             <svg

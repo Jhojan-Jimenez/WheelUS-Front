@@ -1,0 +1,78 @@
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { RideSchema } from '../types';
+
+const api = axios.create({
+  baseURL: `${import.meta.env.VITE_BACKEND_URL}`,
+});
+const setAuthHeader = () => {
+  const token = Cookies.get('authToken');
+  if (token) {
+    api.defaults.headers['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers['Authorization']; // Remove the header if no token
+  }
+};
+export async function getAvaliableRides({
+  origin = '',
+  destination = '',
+  seats = 1,
+}: {
+  origin?: string | null;
+  destination?: string | null;
+  seats?: number | null;
+}) {
+  const body = {
+    origin,
+    destination,
+    seats,
+  };
+  setAuthHeader();
+  const res = await api.post('/ride/get-rides', body);
+  return res.data.rides;
+}
+export async function getOrigins() {
+  const res = await api.get('/ride/start-routes');
+
+  return res.data.origins;
+}
+export async function getDestinations() {
+  const res = await api.get('/ride/end-routes');
+
+  return res.data.destinations;
+}
+export async function getRideById(rideId: string) {
+  setAuthHeader();
+  const res = await api.get(`/ride/${rideId}`);
+  return res.data.ride;
+}
+export async function createRide(data: RideSchema) {
+  const res = await api.post('/ride/', data);
+  return res;
+}
+
+export async function deleteRide(rideId: string) {
+  const res = await api.delete(`/ride/${rideId}`);
+  return res;
+}
+// export async function recommendedFee(start: string, end: string) {
+//   const res = await api.get(`/ride/fee?startPoint=${start}&endPoint=${end}`);
+//   return res.recommendedFee;
+// }
+
+// export async function transmilenioRoutes() {
+//   const url =
+//     'https://gis.transmilenio.gov.co/arcgis/rest/services/Troncal/consulta_estaciones_troncales/FeatureServer/0/query?where=1%3D1&outFields=nombre_estacion&outSR=4326&f=json';
+//   const res = await fetch(url);
+//   const data = await res.json();
+//   const nombresEstacion = data.features
+//     .map((feature) => feature.attributes.nombre_estacion.toString())
+//     .filter(
+//       (name) =>
+//         (name.includes('Calle') ||
+//           name.includes('Norte') ||
+//           name.includes('AV.')) &&
+//         !name.includes('-')
+//     );
+//   return nombresEstacion;
+// }

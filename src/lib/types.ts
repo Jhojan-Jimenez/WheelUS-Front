@@ -67,3 +67,10 @@ export interface VehicleSchema {
   rides: string[];
   seats: string;
 }
+
+export interface RidesParams {
+  spots: number;
+  start: string;
+  end: string;
+  page: number;
+}
