@@ -11,7 +11,7 @@ export default function NavBar() {
   const { isOpen: isSidebarOpen, toggle: toggleSidebar } = useOpen();
   const { user } = useAuth();
   return (
-    <header className="antialiased sticky w-screen top-0 flex justify-center border-b-2 z-100 bg-white">
+    <header className="antialiased sticky w-screen top-0 flex justify-center border-b-2 z-100 bg-white z-40">
       <nav className=" border-gray-200 px-4 lg:px-6 py-2.5 w-full max-w-[1240px]">
         <div className="flex flex-wrap justify-between items-center">
           <div className="flex justify-start items-center">
@@ -65,7 +65,6 @@ export default function NavBar() {
             <SearchBar />
           </div>
           <div className="flex items-center lg:order-2">
-            <RoleToggle />
             <button
               id="toggleSidebarMobileSearch"
               type="button"
@@ -90,6 +89,7 @@ export default function NavBar() {
             </button>
             {user && (
               <>
+                <RoleToggle />
                 <NotificationDropdown />
                 <AppsDropdown />
                 <UserDropdown />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import RideCard from '../rides/RideCard';
 import Modal from '../rides/Modal';
+import ReactDOM from 'react-dom';
 
 // Mock data for demonstration (30 rides)
 const mockRides = Array.from({ length: 30 }, (_, i) => ({
@@ -101,14 +102,9 @@ const Rides: React.FC = () => {
   );
 
   const FilterContent = ({ inModal = false }) => (
-    <div className={` ${inModal ? 'flex flex-col' : 'w-full flex gap-2'}`}>
-      <FilterDropdown
-        isOpen={isSpotFilterOpen}
-        setIsOpen={setIsSpotFilterOpen}
-        title="Cupos disponibles"
-        options={['1', '2', '3', '4']}
-        filterKey="spots"
-      />
+    <div
+      className={` ${inModal ? 'flex flex-col items-center h-3/4 justify-around' : 'w-full flex gap-2'}`}
+    >
       <FilterDropdown
         isOpen={isStartFilterOpen}
         setIsOpen={setIsStartFilterOpen}
@@ -123,13 +119,20 @@ const Rides: React.FC = () => {
         options={['Boston', 'San Francisco', 'Detroit', 'Orlando']}
         filterKey="end"
       />
+      <FilterDropdown
+        isOpen={isSpotFilterOpen}
+        setIsOpen={setIsSpotFilterOpen}
+        title="Cupos disponibles"
+        options={['1', '2', '3', '4']}
+        filterKey="spots"
+      />
     </div>
   );
 
   return (
-    <div className="p-4 h-full w-full bg-gray-100">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-6 bg-white rounded-lg shadow p-4">
+    <div className="p-4 h-full w-full shadow-lg ">
+      <div className="max-w-6xl mx-auto ">
+        <div className="mb-6 bg-white rounded-lg shadow p-4 ">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold text-gray-800">
               Rides disponibles
@@ -173,10 +176,10 @@ const Rides: React.FC = () => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {paginatedRides.map((ride) => (
+        <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+          {paginatedRides.map((ride, index) => (
             <RideCard
-              key={ride.id}
+              key={index}
               imageSrc={ride.imageSrc}
               timestamp={ride.timestamp}
               spots={ride.spots}
@@ -221,25 +224,28 @@ const Rides: React.FC = () => {
           </div>
         )}
       </div>
+      {isFilterModalOpen &&
+        ReactDOM.createPortal(
+          <Modal
+            isOpen={isFilterModalOpen}
+            onClose={() => setIsFilterModalOpen(false)}
+          >
+            <div className="h-full flex flex-col">
+              <h3 className="text-2xl font-bold mb-6">Filtros</h3>
+              <FilterContent inModal={true} />
+              {(spots || startPoint || endPoint) && (
+                <button
+                  onClick={clearFilters}
+                  className="mt-auto w-full px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-300"
+                >
+                  Limpiar filtros
+                </button>
+              )}
+            </div>
+          </Modal>,
 
-      <Modal
-        isOpen={isFilterModalOpen}
-        onClose={() => setIsFilterModalOpen(false)}
-        fullScreen={true}
-      >
-        <div className="h-full flex flex-col">
-          <h3 className="text-2xl font-bold mb-6">Filtros</h3>
-          <FilterContent inModal={true} />
-          {(spots || startPoint || endPoint) && (
-            <button
-              onClick={clearFilters}
-              className="mt-auto w-full px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-300"
-            >
-              Limpiar filtros
-            </button>
-          )}
-        </div>
-      </Modal>
+          document.body
+        )}
     </div>
   );
 };

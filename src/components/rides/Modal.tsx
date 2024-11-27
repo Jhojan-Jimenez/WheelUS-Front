@@ -20,9 +20,9 @@ const Modal: React.FC<ModalProps> = ({
       className={`fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center ${fullScreen ? 'p-0' : 'p-4'}`}
     >
       <div
-        className={`bg-white ${fullScreen ? 'w-full h-full' : 'rounded-lg shadow-xl max-w-md w-full max-h-[90vh]'} overflow-y-auto`}
+        className={`bg-white ${fullScreen ? 'w-full h-full' : 'rounded-lg shadow-xl max-w-md w-full h-[90vh]'} overflow-y-auto`}
       >
-        <div className="p-4">
+        <div className="p-4 h-full">
           <button
             onClick={onClose}
             className="float-right text-gray-400 hover:text-gray-600"
