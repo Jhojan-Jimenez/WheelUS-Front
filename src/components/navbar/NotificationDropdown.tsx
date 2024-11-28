@@ -1,8 +1,19 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { useOpen } from '@/hooks/useOpen';
+import { NotificationSchema } from '@/lib/types';
+import { formatDateFront } from '@/lib/utils';
+import { getNotifications } from '@/lib/api/user';
 
 const NotificationDropdown: React.FC = () => {
   const { isOpen, toggle: toggleDropdown, ref } = useOpen();
+  const [notifications, setNotifications] = useState<NotificationSchema[]>([]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const res = await getNotifications();
+  //     setNotifications(res);
+  //   };
+  //   fetchData();
+  // }, [notifications]);
 
   return (
     <div className="relative">
@@ -31,8 +42,9 @@ const NotificationDropdown: React.FC = () => {
             Notifications
           </div>
           <div className="bg-white">
-            <Notification />
-            <Notification />
+            {notifications.map((notification, index) => {
+              return <Notification key={index} notification={notification} />;
+            })}
           </div>
         </div>
       )}
@@ -40,7 +52,11 @@ const NotificationDropdown: React.FC = () => {
   );
 };
 
-const Notification: React.FC = () => {
+const Notification = ({
+  notification,
+}: {
+  notification: NotificationSchema;
+}) => {
   return (
     <div className="hover:bg-slate-50">
       <a href="#" className="flex py-3 px-4 border-b ">
@@ -67,11 +83,11 @@ const Notification: React.FC = () => {
           <div className="text-gray-500 font-normal text-sm mb-1.5 ">
             New message from{' '}
             <span className="font-semibold text-gray-900 ">Bonnie Green</span>:
-            "Hey, what's up? All set for the presentation?"
+            {notification.content}
           </div>
 
           <div className="text-xs font-medium text-primary-700 ">
-            a few moments ago
+            {formatDateFront(notification.timestamp)}
           </div>
         </div>
         <button

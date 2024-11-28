@@ -1,9 +1,5 @@
-import axios from 'axios';
+import { api } from './Config';
 import { userLogData, userRegData } from '../types';
-
-const api = axios.create({
-  baseURL: `${import.meta.env.VITE_BACKEND_URL}`,
-});
 
 export async function authSignin({ email, password }: userLogData) {
   const config = {

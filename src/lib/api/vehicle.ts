@@ -1,19 +1,5 @@
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import { api, setAuthHeader } from './Config';
 import { vehicleRegData } from '../types';
-
-const api = axios.create({
-  baseURL: `${import.meta.env.VITE_BACKEND_URL}`,
-});
-
-const setAuthHeader = () => {
-  const token = Cookies.get('authToken');
-  if (token) {
-    api.defaults.headers['Authorization'] = `Bearer ${token}`;
-  } else {
-    delete api.defaults.headers['Authorization']; // Remove the header if no token
-  }
-};
 
 export async function createVehicle(
   newData: vehicleRegData,

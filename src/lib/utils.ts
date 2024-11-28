@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
 import { format } from 'date-fns';
+import { FirestoreTimestamp } from './types';
 
 export const normalizeValidationBackErrors = (err: AxiosError): string => {
   let errorMessage = 'Ocurrió un error:';
@@ -23,3 +24,11 @@ export const normalizeValidationBackErrors = (err: AxiosError): string => {
 export const formatDateFront = (date: string | number | Date): string => {
   return format(new Date(date), 'dd/MM/yyyy');
 };
+export function formatFirestoreTimestamp(
+  timestamp: FirestoreTimestamp
+): string {
+  const date = new Date(
+    timestamp._seconds * 1000 + timestamp._nanoseconds / 1000000
+  );
+  return date.toLocaleString();
+}

@@ -32,19 +32,18 @@ export interface UserSchema {
   email: string;
   lastname: string;
   name: string;
-  //   notifications?: Notification[];
-  notifications?: string[];
+  notifications?: NotificationSchema[];
   password: string;
   photo?: string;
   rides: RideSchema[];
   vehicle_plate: string;
 }
 
-// interface Notification {
-//   type: string;
-//   content: string;
-//   timestamp: Date;
-// }
+export interface NotificationSchema {
+  type: string;
+  content: string;
+  timestamp: Date;
+}
 
 export interface RideSchema {
   available_seats: number;
@@ -73,4 +72,27 @@ export interface RidesParams {
   start: string;
   end: string;
   page: number;
+}
+
+export interface MessageSchema {
+  chatId: number;
+  receiverId: string;
+  senderId: string;
+  content: string;
+  timestamp: FirestoreTimestamp;
+}
+export interface ChatSchema {
+  chatId: string;
+  users: string[];
+  createdAt: FirestoreTimestamp;
+  unreadCounts: {
+    [userId: string]: number;
+  };
+  lastMessage: string;
+  lastMessageTimestamp: FirestoreTimestamp;
+}
+
+export interface FirestoreTimestamp {
+  _seconds: number;
+  _nanoseconds: number;
 }

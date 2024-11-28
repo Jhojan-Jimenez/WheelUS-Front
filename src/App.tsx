@@ -9,6 +9,7 @@ import PublicRoute from './components/route/PublicRoute';
 import ProtectedRoute from './components/route/AuthRoute';
 import { RoleProvider } from './contexts/rolContext';
 import CarRegister from './components/pages/CarRegister';
+import Chat from './components/pages/Chat';
 
 function App() {
   return (
@@ -47,6 +48,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <CarRegister />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/chat"
+                  element={
+                    <ProtectedRoute>
+                      <Chat />
                     </ProtectedRoute>
                   }
                 />
