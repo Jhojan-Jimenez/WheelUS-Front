@@ -5,7 +5,6 @@ export async function getNotifications() {
   const res = await api.get('/user/notifications');
   return res.data.notifications;
 }
-
 export async function getUserById(id: string) {
   setAuthHeader();
   const res = await api.get(`/user/${id}`);

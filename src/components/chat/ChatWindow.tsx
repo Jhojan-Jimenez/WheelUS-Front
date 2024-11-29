@@ -1,5 +1,6 @@
 import { useAuth } from '@/hooks/useAuth';
-import { ChatSchema, MessageSchema } from '@/lib/types';
+import { getUserById } from '@/lib/api/user';
+import { ChatSchema, MessageSchema, UserSchema } from '@/lib/types';
 import { formatFirestoreTimestamp } from '@/lib/utils';
 import React, { useState, useRef, useEffect } from 'react';
 import { BeatLoader } from 'react-spinners';
@@ -21,11 +22,21 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 }) => {
   const { user } = useAuth();
   const [newMessage, setNewMessage] = useState('');
+  const [contactUser, setContactUser] = useState<UserSchema | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+  useEffect(() => {
+    const fetchContactData = async () => {
+      const contactId = chat?.users.filter((userId) => userId !== user?.id)[0];
+      if (!contactId) return;
+      const res = await getUserById(contactId);
+      setContactUser(res);
+    };
+    fetchContactData();
+  }, [chat, user?.id]);
 
   useEffect(scrollToBottom, [messages]);
 
@@ -39,7 +50,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
 
   if (loading) {
     return (
-      <div className="flex-1 flex justify-center items-center h-full">
+      <div className="loading-layout">
         <BeatLoader color="#028747" />
       </div>
     );
@@ -64,12 +75,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           </svg>
         </button>
         <img
-          src={'/placeholder.svg?height=40&width=40'}
-          alt={chat?.users.filter((userId) => userId !== user?.id)[0]}
+          src={contactUser?.photo || '/placeholder.svg?height=40&width=40'}
+          alt={contactUser?.name || 'Imagen User'}
           className="w-10 h-10 rounded-full mr-3"
         />
         <h2 className="text-xl font-semibold">
-          {chat?.users.filter((userId) => userId !== user?.id)[0]}
+          {(contactUser?.name || '') + ' ' + (contactUser?.lastname || '')}
         </h2>
       </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-4">

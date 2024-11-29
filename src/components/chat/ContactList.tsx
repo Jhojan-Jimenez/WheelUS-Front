@@ -59,7 +59,7 @@ const ContactList: React.FC<ContactListProps> = ({
   };
   if (loading) {
     return (
-      <div className="flex-1 flex justify-center items-center h-full">
+      <div className="loading-layout">
         <MoonLoader color="#028747" />
       </div>
     );

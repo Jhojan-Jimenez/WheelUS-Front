@@ -124,15 +124,7 @@ const Rides: React.FC = () => {
         ) : (
           <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {activeRides.map((ride, index) => (
-              <RideCard
-                key={index}
-                imageSrc={'/placeholder.svg?height=80&width=80'}
-                timestamp={ride.departure}
-                spots={ride.available_seats}
-                startPoint={ride.origin}
-                endPoint={ride.destination}
-                onClick={() => console.log('Route clicked', ride.route)}
-              />
+              <RideCard key={index} ride={ride} />
             ))}
           </div>
         )}

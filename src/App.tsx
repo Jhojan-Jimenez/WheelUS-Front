@@ -12,6 +12,7 @@ import CarRegister from './components/pages/CarRegister';
 import Chat from './components/pages/Chat';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import MyRides from './components/pages/MyRides';
 
 function App() {
   return (
@@ -59,6 +60,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <Chat />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/myRides"
+                  element={
+                    <ProtectedRoute>
+                      <MyRides />
                     </ProtectedRoute>
                   }
                 />

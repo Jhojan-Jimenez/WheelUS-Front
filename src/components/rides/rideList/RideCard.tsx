@@ -1,32 +1,56 @@
+import Modal from '@/components/modals/Modal';
+import useLoad from '@/hooks/useLoad';
+import { useOpen } from '@/hooks/useOpen';
+import { getVehicleByPlate } from '@/lib/api/vehicle';
+import { RideSchema, VehicleSchema } from '@/lib/types';
 import { formatDateFront } from '@/lib/utils';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { MoonLoader } from 'react-spinners';
 
-interface RideCardProps {
-  imageSrc: string;
-  timestamp: string;
-  spots: number;
-  startPoint: string;
-  endPoint: string;
-  onClick?: () => void;
-}
+const RideCard: React.FC<{ ride: RideSchema }> = ({ ride }) => {
+  const [vehicle, setVehicle] = useState<VehicleSchema | null>(null);
+  const { isOpen, open, close, ref } = useOpen();
+  const { loading, execute: fetchVehicle } = useLoad(getVehicleByPlate);
+  const onClick = () => {
+    console.log('Route clicked', ride.route);
+    open();
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetchVehicle(ride.vehicle_plate);
+      setVehicle(res);
+    };
+    fetchData();
+  }, []);
 
-const RideCard: React.FC<RideCardProps> = ({
-  imageSrc,
-  timestamp,
-  spots,
-  startPoint,
-  endPoint,
-  onClick,
-}) => {
   return (
     <div className="w-full bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+      {isOpen && (
+        <Modal isOpen={isOpen} onClose={() => close()} height="75vh">
+          <div className="p-4 h-full" ref={ref}>
+            <ul className="list-disc pl-4">
+              {ride.route.map((route, index) => (
+                <li key={index} className="text-gray-700">
+                  {route}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Modal>
+      )}
       <div className="flex items-center p-4 gap-4">
         <div className="relative w-20 h-20 flex-shrink-0">
-          <img
-            src={imageSrc}
-            alt="Vehicle"
-            className="w-full h-full object-cover rounded-lg shadow-md"
-          />
+          {loading ? (
+            <div className="loading-layout">
+              <MoonLoader color="#028747" />
+            </div>
+          ) : (
+            <img
+              src={vehicle?.photo}
+              alt="Vehicle"
+              className="w-full h-full object-cover rounded-lg shadow-md"
+            />
+          )}
         </div>
         <div className="flex-grow space-y-2">
           <button
@@ -62,7 +86,7 @@ const RideCard: React.FC<RideCardProps> = ({
                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span className="text-sm">{formatDateFront(timestamp)}</span>
+            <span className="text-sm">{formatDateFront(ride.departure)}</span>
           </div>
           <div className="flex items-center gap-2 text-gray-600">
             <svg
@@ -78,7 +102,7 @@ const RideCard: React.FC<RideCardProps> = ({
                 d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
               />
             </svg>
-            <span className="text-sm">{spots} cupos</span>
+            <span className="text-sm">{ride.available_seats} cupos</span>
           </div>
           <div className="flex items-center gap-2 text-gray-600">
             <svg
@@ -101,7 +125,7 @@ const RideCard: React.FC<RideCardProps> = ({
               />
             </svg>
             <span className="text-sm">
-              {startPoint} → {endPoint}
+              {ride.origin} → {ride.destination}
             </span>
           </div>
         </div>

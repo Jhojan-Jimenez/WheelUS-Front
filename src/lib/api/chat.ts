@@ -36,9 +36,7 @@ export async function unreadChatNotifications() {
   const res = await api.get('/chat/user-notifications');
   return res.data.chats;
 }
-
 export async function userNotifications() {
   const res = await getUserByToken();
-
   return res.notifications;
 }

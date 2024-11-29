@@ -12,6 +12,9 @@ const RoleToggle: React.FC = () => {
 
   const toggleRole = () => {
     setCurrentRole(isDriver ? 'passenger' : 'driver');
+    if (!isDriver) {
+      navigate('/myRides');
+    }
   };
 
   if (!user?.vehicle_plate) {

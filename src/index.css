@@ -60,3 +60,10 @@ button:focus-visible {
   word-wrap: break-word;
   white-space: normal;
 }
+.loading-layout {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

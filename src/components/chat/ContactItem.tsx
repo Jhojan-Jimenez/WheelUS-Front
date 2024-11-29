@@ -1,8 +1,11 @@
 import { useAuth } from '@/hooks/useAuth';
+import useLoad from '@/hooks/useLoad';
 import { readChat } from '@/lib/api/chat';
 import socket from '@/lib/api/Config';
-import { ChatSchema, MessageSchema } from '@/lib/types';
+import { getUserById } from '@/lib/api/user';
+import { ChatSchema, MessageSchema, UserSchema } from '@/lib/types';
 import { useEffect, useState } from 'react';
+import { BeatLoader } from 'react-spinners';
 
 export default function ContactItem({
   chat,
@@ -16,11 +19,18 @@ export default function ContactItem({
   const { user } = useAuth();
   const count = chat.unreadCounts[user?.id || ''] || 0;
   const [unreadCount, setUnreadCount] = useState(count);
+  const [contactUser, setContactUser] = useState<UserSchema | null>(null);
+  const { loading, execute: fetchContact } = useLoad(getUserById);
   const [lastMessage, setLastMessage] = useState(chat.lastMessage);
   const otherUserId = (chat: ChatSchema) => {
     return chat.users.filter((userId) => user && userId !== user.id)[0];
   };
   useEffect(() => {
+    const fetchContactData = async () => {
+      const res = await fetchContact(otherUserId(chat));
+      setContactUser(res);
+    };
+    fetchContactData();
     socket.on('privateMessage', async (message: MessageSchema) => {
       if (String(message.chatId) === String(chat.chatId)) {
         setUnreadCount((prev: number) => prev + 1);
@@ -46,17 +56,26 @@ export default function ContactItem({
       }}
     >
       <div className="flex items-center w-full justify-between">
-        <div className="flex items-center">
-          <img
-            src={'/placeholder.svg?height=40&width=40'}
-            alt={otherUserId(chat) || 'Imagen User'}
-            className="w-12 h-12 rounded-full mr-4"
-          />
-          <div>
-            <h3 className="font-semibold">{otherUserId(chat)}</h3>
-            <p className="text-sm text-gray-600">{lastMessage}</p>
+        {loading ? (
+          <>
+            <div className="loading-layout">
+              <BeatLoader color="#028747" />
+            </div>
+          </>
+        ) : (
+          <div className="flex items-center">
+            <img
+              src={contactUser?.photo}
+              alt={contactUser?.name || 'Imagen User'}
+              className="w-12 h-12 rounded-full mr-4"
+            />
+            <div>
+              <h3 className="font-semibold">{contactUser?.name}</h3>
+              <p className="text-sm text-gray-600">{lastMessage}</p>
+            </div>
           </div>
-        </div>
+        )}
+
         {unreadCount > 0 && (
           <div className="w-10 h-10 bg-green-300 rounded-full flex justify-center items-center">
             {unreadCount}
