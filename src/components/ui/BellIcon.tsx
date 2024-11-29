@@ -1,6 +1,7 @@
 import { userNotifications } from '@/lib/api/chat';
 import socket from '@/lib/api/Config';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const BellIcon: React.FC = () => {
   const [notificationCount, setNotificationCount] = useState(0);
@@ -11,7 +12,7 @@ const BellIcon: React.FC = () => {
     };
     fetchData();
     socket.on('appNotification', (mes) => {
-      console.log(mes);
+      toast.info(mes);
 
       setNotificationCount((prev) => prev + 1);
     });

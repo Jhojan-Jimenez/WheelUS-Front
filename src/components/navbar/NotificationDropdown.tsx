@@ -33,7 +33,7 @@ const NotificationDropdown: React.FC = () => {
           <div className="block py-2 px-4 font-medium text-center text-gray-700 bg-gray-100 ">
             Notifications
           </div>
-          <div className="bg-white">
+          <div className="bg-white max-h-[50vh] overflow-y-auto relative">
             {notifications.map((notification, index) => {
               return <Notification key={index} notification={notification} />;
             })}
@@ -50,7 +50,7 @@ const Notification = ({
   notification: NotificationSchema;
 }) => {
   return (
-    <div className="hover:bg-slate-50">
+    <div className="hover:bg-slate-50 ">
       <a href="#" className="flex py-3 px-4 border-b ">
         <div className="flex-shrink-0">
           <img

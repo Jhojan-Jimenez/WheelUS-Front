@@ -10,10 +10,13 @@ import ProtectedRoute from './components/route/AuthRoute';
 import { RoleProvider } from './contexts/rolContext';
 import CarRegister from './components/pages/CarRegister';
 import Chat from './components/pages/Chat';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
     <Router>
+      <ToastContainer />
       <LoadingProvider>
         <AuthProvider>
           <RoleProvider>

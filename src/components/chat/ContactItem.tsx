@@ -21,10 +21,14 @@ export default function ContactItem({
     return chat.users.filter((userId) => user && userId !== user.id)[0];
   };
   useEffect(() => {
-    socket.on('message', (message: MessageSchema) => {
+    socket.on('privateMessage', async (message: MessageSchema) => {
       if (String(message.chatId) === String(chat.chatId)) {
         setUnreadCount((prev: number) => prev + 1);
         setLastMessage(message.content);
+      }
+      if (String(message.chatId) === String(selectedChatId)) {
+        setUnreadCount(0);
+        await readChat(chat.chatId);
       }
     });
   }, []);

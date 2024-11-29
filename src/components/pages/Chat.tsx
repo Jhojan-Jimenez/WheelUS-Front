@@ -42,7 +42,7 @@ const Chat: React.FC = () => {
       }
     };
     fetchChatData();
-    socket.on('message', async (message: MessageSchema) => {
+    socket.on('privateMessage', async (message: MessageSchema) => {
       const res = await getUserChats();
       if (
         !res.find((chat: ChatSchema) => chat.chatId === String(message.chatId))
