@@ -35,11 +35,8 @@ const Chat: React.FC = () => {
       }
       if (selectedChat?.chatId && user) {
         setLoadingMessages(true);
-        const otherUserId = selectedChat.users.filter(
-          (userId) => userId !== user.id
-        )[0];
 
-        const res = await getChatMessages(otherUserId);
+        const res = await getChatMessages(selectedChat.chatId);
         setMessages(res);
         setLoadingMessages(false);
       }
@@ -58,7 +55,10 @@ const Chat: React.FC = () => {
         });
       }
 
-      setMessages((prev) => [...prev, message]);
+      if (selectedChat?.chatId === String(message.chatId)) {
+        setMessages((prev) => [...prev, message]);
+      }
+
       console.log('Mensaje recibido:', message);
     });
 

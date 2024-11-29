@@ -1,10 +1,21 @@
-import React from 'react';
+import { unreadChatNotifications } from '@/lib/api/chat';
+import socket from '@/lib/api/Config';
+import React, { useEffect, useState } from 'react';
 
-interface ChatIconProps {
-  notificationCount: number;
-}
+const ChatIcon: React.FC = () => {
+  const [notificationCount, setNotificationCount] = useState(0);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await unreadChatNotifications();
+      setNotificationCount(res);
+    };
+    fetchData();
+    socket.on('notification', (mes) => {
+      console.log(mes);
 
-const ChatIcon: React.FC<ChatIconProps> = ({ notificationCount }) => {
+      setNotificationCount((prev) => prev + 1);
+    });
+  }, []);
   return (
     <div className="relative inline-block">
       <svg

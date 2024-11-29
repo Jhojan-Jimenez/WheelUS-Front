@@ -1,10 +1,21 @@
-import React from 'react';
+import { userNotifications } from '@/lib/api/chat';
+import socket from '@/lib/api/Config';
+import React, { useEffect, useState } from 'react';
 
-interface BellIconProps {
-  notificationCount: number;
-}
+const BellIcon: React.FC = () => {
+  const [notificationCount, setNotificationCount] = useState(0);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await userNotifications();
+      setNotificationCount(res.length);
+    };
+    fetchData();
+    socket.on('appNotification', (mes) => {
+      console.log(mes);
 
-const BellIcon: React.FC<BellIconProps> = ({ notificationCount }) => {
+      setNotificationCount((prev) => prev + 1);
+    });
+  }, []);
   return (
     <div className="relative inline-block">
       <svg

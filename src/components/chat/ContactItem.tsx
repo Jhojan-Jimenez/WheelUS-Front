@@ -1,7 +1,7 @@
 import { useAuth } from '@/hooks/useAuth';
 import { readChat } from '@/lib/api/chat';
 import socket from '@/lib/api/Config';
-import { ChatSchema } from '@/lib/types';
+import { ChatSchema, MessageSchema } from '@/lib/types';
 import { useEffect, useState } from 'react';
 
 export default function ContactItem({
@@ -16,13 +16,15 @@ export default function ContactItem({
   const { user } = useAuth();
   const count = chat.unreadCounts[user?.id || ''] || 0;
   const [unreadCount, setUnreadCount] = useState(count);
+  const [lastMessage, setLastMessage] = useState(chat.lastMessage);
   const otherUserId = (chat: ChatSchema) => {
     return chat.users.filter((userId) => user && userId !== user.id)[0];
   };
   useEffect(() => {
-    socket.on('message', (message) => {
-      if (message.chatId === chat.chatId) {
+    socket.on('message', (message: MessageSchema) => {
+      if (String(message.chatId) === String(chat.chatId)) {
         setUnreadCount((prev: number) => prev + 1);
+        setLastMessage(message.content);
       }
     });
   }, []);
@@ -48,7 +50,7 @@ export default function ContactItem({
           />
           <div>
             <h3 className="font-semibold">{otherUserId(chat)}</h3>
-            <p className="text-sm text-gray-600">{chat.lastMessage}</p>
+            <p className="text-sm text-gray-600">{lastMessage}</p>
           </div>
         </div>
         {unreadCount > 0 && (

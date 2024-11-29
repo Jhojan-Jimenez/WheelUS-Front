@@ -11,3 +11,8 @@ export async function getUserById(id: string) {
   const res = await api.get(`/user/${id}`);
   return res.data.user;
 }
+export async function getUserByToken() {
+  setAuthHeader();
+  const res = await api.get('/user/');
+  return res.data.user;
+}
