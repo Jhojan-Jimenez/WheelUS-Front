@@ -173,3 +173,7 @@ export const vehicleModifySchema = vehicleRegSchema
 //   origin: true,
 //   route: true,
 // });
+
+export const userIdFormSchema = z.object({
+  userId: z.string().length(6, { message: 'El ID debe tener 6 caracteres' }),
+});

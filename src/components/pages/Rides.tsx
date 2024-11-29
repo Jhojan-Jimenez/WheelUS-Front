@@ -1,12 +1,11 @@
 import { getAvaliableRides } from '@/lib/api/ride';
 import { RideSchema } from '@/lib/types';
 import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import { BeatLoader } from 'react-spinners';
 import { FilterContent } from '../rides/rideList/Filters';
 import { Index } from '../rides/rideList/Index';
-import Modal from '../rides/rideList/Modal';
+import Modal from '../modals/Modal';
 import RideCard from '../rides/rideList/RideCard';
 
 const Rides: React.FC = () => {
@@ -147,37 +146,34 @@ const Rides: React.FC = () => {
           />
         )}
       </div>
-      {isFilterModalOpen &&
-        ReactDOM.createPortal(
-          <Modal
-            isOpen={isFilterModalOpen}
-            onClose={() => setIsFilterModalOpen(false)}
-          >
-            <div className="h-full flex flex-col">
-              <h3 className="text-2xl font-bold mb-6">Filtros</h3>
-              <FilterContent
-                inModal={true}
-                isStartFilterOpen={isStartFilterOpen}
-                setIsStartFilterOpen={setIsStartFilterOpen}
-                isEndFilterOpen={isEndFilterOpen}
-                setIsEndFilterOpen={setIsEndFilterOpen}
-                isSpotFilterOpen={isSpotFilterOpen}
-                setIsSpotFilterOpen={setIsSpotFilterOpen}
-                applyFilter={applyFilter}
-              />
-              {(spots || startPoint || endPoint) && (
-                <button
-                  onClick={clearFilters}
-                  className="mt-auto w-full px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-300"
-                >
-                  Limpiar filtros
-                </button>
-              )}
-            </div>
-          </Modal>,
-
-          document.body
-        )}
+      {isFilterModalOpen && (
+        <Modal
+          isOpen={isFilterModalOpen}
+          onClose={() => setIsFilterModalOpen(false)}
+        >
+          <div className="h-full flex flex-col">
+            <h3 className="text-2xl font-bold mb-6">Filtros</h3>
+            <FilterContent
+              inModal={true}
+              isStartFilterOpen={isStartFilterOpen}
+              setIsStartFilterOpen={setIsStartFilterOpen}
+              isEndFilterOpen={isEndFilterOpen}
+              setIsEndFilterOpen={setIsEndFilterOpen}
+              isSpotFilterOpen={isSpotFilterOpen}
+              setIsSpotFilterOpen={setIsSpotFilterOpen}
+              applyFilter={applyFilter}
+            />
+            {(spots || startPoint || endPoint) && (
+              <button
+                onClick={clearFilters}
+                className="mt-auto w-full px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-300"
+              >
+                Limpiar filtros
+              </button>
+            )}
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

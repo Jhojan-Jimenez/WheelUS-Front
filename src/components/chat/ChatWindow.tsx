@@ -7,6 +7,7 @@ import { BeatLoader } from 'react-spinners';
 interface ChatWindowProps {
   chat: ChatSchema | undefined;
   messages: MessageSchema[];
+  loading: boolean;
   onBackClick: () => void;
   sendMessage: (message: string) => void;
 }
@@ -14,6 +15,7 @@ interface ChatWindowProps {
 const ChatWindow: React.FC<ChatWindowProps> = ({
   chat,
   messages,
+  loading,
   onBackClick,
   sendMessage,
 }) => {
@@ -35,7 +37,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     }
   };
 
-  if (messages.length == 0) {
+  if (loading) {
     return (
       <div className="flex-1 flex justify-center items-center h-full">
         <BeatLoader color="#028747" />
@@ -43,7 +45,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     );
   }
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col overflow-y-hidden max-h-[85vh]">
       <div className="bg-emerald-500 text-white p-4 flex items-center">
         <button onClick={onBackClick} className="md:hidden mr-2">
           <svg
@@ -63,10 +65,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         </button>
         <img
           src={'/placeholder.svg?height=40&width=40'}
-          alt={chat?.users[0]}
+          alt={chat?.users.filter((userId) => userId !== user?.id)[0]}
           className="w-10 h-10 rounded-full mr-3"
         />
-        <h2 className="text-xl font-semibold">{chat?.users[0]}</h2>
+        <h2 className="text-xl font-semibold">
+          {chat?.users.filter((userId) => userId !== user?.id)[0]}
+        </h2>
       </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message, index) => (
@@ -91,7 +95,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         <div ref={messagesEndRef} />
       </div>
       <div className="bg-white border-t border-gray-200 p-4">
-        <div className="flex items-center">
+        <form
+          className="flex items-center"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSend();
+          }}
+        >
           <input
             type="text"
             value={newMessage}
@@ -100,7 +110,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
             className="flex-1 border border-gray-300 rounded-full px-4 py-2 mr-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
           />
           <button
-            onClick={handleSend}
+            type="submit"
             className="bg-emerald-500 text-white rounded-full p-2 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500"
           >
             <svg
@@ -118,7 +128,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
               />
             </svg>
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );

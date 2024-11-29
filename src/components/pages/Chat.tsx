@@ -3,7 +3,12 @@ import ContactList from '../chat/ContactList';
 import ChatWindow from '../chat/ChatWindow';
 import socket from '@/lib/api/Config';
 import { ChatSchema, MessageSchema } from '@/lib/types';
-import { getChatMessages, getUserChats } from '@/lib/api/chat';
+import {
+  getChatById,
+  getChatMessages,
+  getUserChats,
+  postMessage,
+} from '@/lib/api/chat';
 import { useAuth } from '@/hooks/useAuth';
 
 const Chat: React.FC = () => {
@@ -11,6 +16,8 @@ const Chat: React.FC = () => {
   const { user } = useAuth();
   const [selectedChat, setSelectedChat] = useState<ChatSchema>();
   const [messages, setMessages] = useState<MessageSchema[] | []>([]);
+  const [loadingMessages, setLoadingMessages] = useState(false);
+  const [loadingChats, setLoadingChats] = useState(false);
   const [isMobileContactListVisible, setIsMobileContactListVisible] =
     useState(true);
 
@@ -20,18 +27,37 @@ const Chat: React.FC = () => {
   };
   useEffect(() => {
     const fetchChatData = async () => {
-      const res = await getUserChats();
-      setChats(res);
+      if (!selectedChat?.chatId) {
+        setLoadingChats(true);
+        const res = await getUserChats();
+        setChats(res);
+        setLoadingChats(false);
+      }
       if (selectedChat?.chatId && user) {
+        setLoadingMessages(true);
         const otherUserId = selectedChat.users.filter(
           (userId) => userId !== user.id
         )[0];
+
         const res = await getChatMessages(otherUserId);
         setMessages(res);
+        setLoadingMessages(false);
       }
     };
     fetchChatData();
-    socket.on('message', (message) => {
+    socket.on('message', async (message: MessageSchema) => {
+      const res = await getUserChats();
+      if (
+        !res.find((chat: ChatSchema) => chat.chatId === String(message.chatId))
+      ) {
+        const res = await getChatById(String(message.chatId));
+        setChats((prevChats) => [...prevChats, res]);
+      } else {
+        setChats((prevChats) => {
+          return prevChats;
+        });
+      }
+
       setMessages((prev) => [...prev, message]);
       console.log('Mensaje recibido:', message);
     });
@@ -41,8 +67,17 @@ const Chat: React.FC = () => {
     };
   }, [selectedChat, user]);
 
-  const sendMessage = (message: string) => {
-    socket.emit('privateMessage', { toUserId: 111111, message });
+  const sendMessage = async (message: string) => {
+    if (!selectedChat || !user) return;
+
+    const toUserId = selectedChat.users.find((userId) => userId !== user.id);
+    if (!toUserId) return;
+
+    const newMessage = await postMessage(toUserId, message);
+
+    setMessages((prev) => [...prev, newMessage]);
+
+    socket.emit('privateMessage', { toUserId, message: newMessage });
   };
 
   return (
@@ -54,10 +89,12 @@ const Chat: React.FC = () => {
           chats={chats}
           onSelectChat={handleChatSelect}
           selectedChatId={selectedChat?.chatId}
+          loading={loadingChats}
+          setChats={setChats}
         />
       </div>
       {!selectedChat ? (
-        <div className="h-full flex items-center justify-center flex-1 bg-gray-50">
+        <div className="hidden h-full lg:flex items-center justify-center flex-1 bg-gray-50">
           Select a contact to start chatting
         </div>
       ) : (
@@ -68,6 +105,7 @@ const Chat: React.FC = () => {
             chat={selectedChat}
             messages={messages}
             sendMessage={sendMessage}
+            loading={loadingMessages}
             onBackClick={() => setIsMobileContactListVisible(true)}
           />
         </div>
