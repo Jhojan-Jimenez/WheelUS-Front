@@ -21,6 +21,7 @@ const RideCard: React.FC<{ ride: RideSchema }> = ({ ride }) => {
       setVehicle(res);
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

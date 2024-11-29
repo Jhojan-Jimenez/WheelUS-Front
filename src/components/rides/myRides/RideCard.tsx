@@ -12,7 +12,6 @@ interface RideCardProps {
 }
 
 const RideCard: React.FC<RideCardProps> = ({
-  id,
   from,
   to,
   date,

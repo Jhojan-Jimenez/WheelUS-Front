@@ -41,6 +41,7 @@ export default function ContactItem({
         await readChat(chat.chatId);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
