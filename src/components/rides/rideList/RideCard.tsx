@@ -6,15 +6,19 @@ import { RideSchema, VehicleSchema } from '@/lib/types';
 import { formatDateFront } from '@/lib/utils';
 import React, { useEffect, useState } from 'react';
 import { MoonLoader } from 'react-spinners';
+import BookRide from './BookRide';
 
 const RideCard: React.FC<{ ride: RideSchema }> = ({ ride }) => {
   const [vehicle, setVehicle] = useState<VehicleSchema | null>(null);
   const { isOpen, open, close, ref } = useOpen();
+  const {
+    isOpen: isBookingOpen,
+    open: openBooking,
+    close: closeBooking,
+    ref: bookingRef,
+  } = useOpen();
+
   const { loading, execute: fetchVehicle } = useLoad(getVehicleByPlate);
-  const onClick = () => {
-    console.log('Route clicked', ride.route);
-    open();
-  };
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetchVehicle(ride.vehicle_plate);
@@ -27,20 +31,40 @@ const RideCard: React.FC<{ ride: RideSchema }> = ({ ride }) => {
   return (
     <div className="w-full bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-gray-100">
       {isOpen && (
-        <Modal isOpen={isOpen} onClose={() => close()} height="75vh">
-          <div className="p-4 h-full" ref={ref}>
-            <ul className="list-disc pl-4">
-              {ride.route.map((route, index) => (
-                <li key={index} className="text-gray-700">
-                  {route}
-                </li>
-              ))}
-            </ul>
+        <Modal isOpen={isOpen} onClose={() => close()} height="fit">
+          <div
+            className="p-6 h-full bg-gray-50 rounded-lg shadow-inner"
+            ref={ref}
+          >
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+              Route Details
+            </h2>
+            <div className="overflow-y-auto h-[calc(100%-2rem)] pr-2">
+              <ol className="space-y-4">
+                {ride.route.map((route, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="flex-shrink-0 w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold mr-3">
+                      {index + 1}
+                    </span>
+                    <div className="bg-white p-4 rounded-lg shadow-md flex-grow hover:border hover:border-blue-300">
+                      <p className="text-gray-700">{route}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </Modal>
+      )}
+      {isBookingOpen && (
+        <Modal isOpen={isBookingOpen} onClose={() => closeBooking} height="fit">
+          <div ref={bookingRef}>
+            <BookRide availableStops={ride.route.slice(1, -1)} ride={ride} />
           </div>
         </Modal>
       )}
       <div className="flex items-center p-4 gap-4">
-        <div className="relative w-20 h-20 flex-shrink-0">
+        <div className="relative w-1/3 h-auto flex-shrink-0">
           {loading ? (
             <div className="loading-layout">
               <MoonLoader color="#028747" />
@@ -54,25 +78,46 @@ const RideCard: React.FC<{ ride: RideSchema }> = ({ ride }) => {
           )}
         </div>
         <div className="flex-grow space-y-2">
-          <button
-            onClick={onClick}
-            className="inline-flex items-center px-4 py-1.5 bg-emerald-500 text-white text-sm font-medium rounded-full hover:bg-emerald-600 transition-colors duration-200"
-          >
-            Ver ruta
-            <svg
-              className="ml-1.5 w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <div className="flex flex-col sm:flex-row gap-2 justify-between ">
+            <button
+              onClick={() => open()}
+              className="inline-flex items-center px-4 py-1.5 bg-emerald-500 text-white text-sm font-medium rounded-full hover:bg-emerald-600 transition-colors duration-200"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
+              Ver ruta
+              <svg
+                className="ml-1.5 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+            <button
+              className="inline-flex items-center px-4 py-1.5 bg-emerald-500 text-white text-sm font-medium rounded-full hover:bg-emerald-600 transition-colors duration-200"
+              onClick={() => openBooking()}
+            >
+              Reservar
+              <svg
+                className="w-6 h-6 "
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
+              </svg>
+            </button>
+          </div>
           <div className="flex items-center gap-2 text-gray-600">
             <svg
               className="w-4 h-4"

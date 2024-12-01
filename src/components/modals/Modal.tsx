@@ -24,7 +24,7 @@ const Modal: React.FC<ModalProps> = ({
           className={`fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center ${fullScreen ? 'p-0' : 'p-4'}`}
         >
           <div
-            className={`bg-white ${fullScreen ? 'w-full h-full' : 'rounded-lg shadow-xl max-w-md w-full '} overflow-y-auto`}
+            className={`bg-white ${fullScreen ? 'w-full h-full' : 'rounded-lg shadow-xl max-w-2xl w-full h-fit'} overflow-y-auto`}
             style={{ height }}
           >
             <div className="p-4 h-full">

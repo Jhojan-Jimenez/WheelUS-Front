@@ -33,7 +33,7 @@ const PassangerRides: React.FC = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {passangerRides ? (
+          {passangerRides.length > 0 ? (
             passangerRides.map((ride, index) => (
               <PassengerRideCard
                 key={index}
@@ -42,7 +42,7 @@ const PassangerRides: React.FC = () => {
               />
             ))
           ) : (
-            <div>Crea un viaje para que aparezca aquí</div>
+            <div>Resreva un viaje para que aparesca aqui</div>
           )}
         </div>
       )}

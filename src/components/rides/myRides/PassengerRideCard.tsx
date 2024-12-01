@@ -27,17 +27,26 @@ const PassengerRideCard = ({
     if (result.isConfirmed) {
       if (user?.id) {
         if (ride.point) {
-          await deleteBookingRide(user.id, ride.rideId, ride.point);
-        } else {
-          Swal.fire('Error!', 'Ride point is missing.', 'error');
+          await deleteBookingRide(user.id, ride.id, ride.point);
+
+          setPassangerRides((prev: RideSchema[]) => {
+            const indexToRemove = prev.findIndex(
+              (prevRide: RideSchema) =>
+                prevRide.id === ride.id && prevRide.point === ride.point
+            );
+
+            if (indexToRemove === -1) {
+              return prev;
+            }
+
+            return [
+              ...prev.slice(0, indexToRemove),
+              ...prev.slice(indexToRemove + 1),
+            ];
+          });
         }
-      } else {
-        Swal.fire('Error!', 'User ID is missing.', 'error');
       }
 
-      setPassangerRides((prev: RideSchema[]) =>
-        prev.filter((prevRide: RideSchema) => prevRide.rideId !== ride.rideId)
-      );
       Swal.fire('Cancelado!', 'El viaje ha sido cancelado.', 'success');
     }
   };

@@ -85,10 +85,7 @@ export default function CreateRide() {
         setErrors(
           Object.fromEntries(
             Object.entries(validation.error.flatten().fieldErrors).map(
-              ([key, value]) => [
-                key,
-                value?.join(', ') || '', // Convierte el array en un string o usa un string vacío si es undefined
-              ]
+              ([key, value]) => [key, value?.join(', ') || '']
             )
           )
         );
@@ -134,7 +131,7 @@ export default function CreateRide() {
             <div className="h-full lg:flex">
               <RouteMap onRouteChange={onRouteChange} />
               {routeNames.length > 0 && (
-                <div className="z-[500] right-0 bg-white shadow-lg rounded-lg p-4  m-2 overflow-y-auto h-fit max-h-full w-full lg:w-1/3">
+                <div className="z-[500] right-0 bg-white shadow-lg rounded-lg p-4  m-2 overflow-y-auto h-fit max-h-[400px] w-full lg:w-1/3">
                   <h2 className="text-lg font-bold text-gray-800 mb-2">
                     Paradas
                   </h2>

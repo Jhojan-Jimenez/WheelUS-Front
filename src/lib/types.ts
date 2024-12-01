@@ -46,17 +46,17 @@ export interface NotificationSchema {
 }
 
 export interface RideSchema {
-  rideId: string;
+  id: string;
   available_seats: number;
   departure: string;
   destination: string;
   fee: number;
   isActive: boolean;
   origin: string;
-  passengers: string[];
   route: string[];
   vehicle_plate: string;
   point?: string;
+  passengers?: RidePassangerSchema[];
 }
 export interface CreateRideSchema {
   available_seats: number;
@@ -106,4 +106,9 @@ export interface ChatSchema {
 export interface FirestoreTimestamp {
   _seconds: number;
   _nanoseconds: number;
+}
+export interface RidePassangerSchema {
+  userId: string;
+  cantidad: number;
+  arrivalPoint: string[];
 }

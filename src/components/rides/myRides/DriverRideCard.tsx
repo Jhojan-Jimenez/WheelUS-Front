@@ -23,10 +23,10 @@ const DriverRideCard = ({
     });
 
     if (result.isConfirmed) {
-      await deleteRide(ride.rideId);
+      await deleteRide(ride.id);
 
       setDriverRides((prev: RideSchema[]) =>
-        prev.filter((prevRide: RideSchema) => prevRide.rideId !== ride.rideId)
+        prev.filter((prevRide: RideSchema) => prevRide.id !== ride.id)
       );
       Swal.fire('Cancelado!', 'El viaje ha sido cancelado.', 'success');
     }
@@ -46,6 +46,31 @@ const DriverRideCard = ({
           ${ride.fee}
         </span>
       </div>
+      {ride.passengers && ride.passengers.length > 0 && (
+        <div className="bg-white p-4 rounded-lg shadow-md mt-4">
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">
+            Pasajeros:
+          </h3>
+          <div className="space-y-2">
+            {ride.passengers.map((passenger, index) => {
+              return (
+                <div
+                  key={index}
+                  className="flex items-center gap-4 p-2 border-b last:border-0"
+                >
+                  <span className="text-gray-600 font-medium">
+                    Id: {passenger.userId}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    Cupos reservados: {passenger.cantidad}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div className="flex justify-between items-center mt-4">
         <span className="text-sm text-gray-600">
           {ride.available_seats} seats available
