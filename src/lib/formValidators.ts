@@ -132,47 +132,45 @@ export const vehicleModifySchema = vehicleRegSchema
   })
   .partial();
 
-// export const rideSchema = z.object({
-//   vehicle_plate: z.string().min(1, 'La placa del vehículo es obligatoria'),
-//   available_seats: z.coerce
-//     .number({ message: 'Los asientos disponibles deben ser un número' })
-//     .min(1, 'La cantidad mínima de asientos disponibles es 1'),
+export const rideSchema = z.object({
+  vehicle_plate: requiredString(),
+  available_seats: z.coerce
+    .number({ message: 'Los asientos disponibles deben ser un número' })
+    .min(1, 'La cantidad mínima de asientos disponibles es 1'),
 
-//   departure: z.coerce.date({ message: 'La fecha no es válida' }).refine(
-//     (date) => {
-//       const allowedTime = new Date();
-//       allowedTime.setHours(allowedTime.getHours() + 1);
-//       allowedTime.setSeconds(0);
-//       allowedTime.setMinutes(allowedTime.getMinutes() - 2);
-//       return date.getTime() >= allowedTime.getTime();
-//     },
-//     { message: 'La reserva debe ser al menos una hora adelante' }
-//   ),
+  departure: z.coerce.date({ message: 'La fecha no es válida' }).refine(
+    (date) => {
+      const allowedTime = new Date();
+      allowedTime.setHours(allowedTime.getHours() + 1);
+      allowedTime.setSeconds(0);
+      allowedTime.setMinutes(allowedTime.getMinutes() - 2);
+      return date.getTime() >= allowedTime.getTime();
+    },
+    { message: 'La reserva debe ser al menos una hora adelante' }
+  ),
 
-//   destination: z
-//     .string()
-//     .min(1, 'El destino es obligatorio y debe tener al menos un carácter'),
+  destination: requiredString(),
 
-//   fee: z.coerce
-//     .number({ message: 'La tarifa debe ser un número' })
-//     .positive({ message: 'La tarifa debe ser un valor positivo' }),
+  fee: z.coerce
+    .number({ message: 'La tarifa debe ser un número' })
+    .positive({ message: 'La tarifa debe ser un valor positivo' }),
 
-//   origin: z
-//     .string()
-//     .min(1, 'El origen es obligatorio y debe tener al menos un carácter'),
+  origin: requiredString(),
 
-//   route: z.array(z.string()).min(2, 'La ruta debe tener al menos dos paradas'),
-// });
+  route: z.array(z.string()).min(2, 'La ruta debe tener al menos dos paradas'),
+});
 
-// export const partialRideSchema = rideSchema.pick({
-//   vehicle_plate: true,
-//   available_seats: true,
-//   departure: false,
-//   destination: true,
-//   fee: true,
-//   origin: true,
-//   route: true,
-// });
+export const partialRideSchema = rideSchema
+  .pick({
+    vehicle_plate: true,
+    available_seats: true,
+    departure: true,
+    destination: true,
+    fee: true,
+    origin: true,
+    route: true,
+  })
+  .partial();
 
 export const userIdFormSchema = z.object({
   userId: z.string().length(6, { message: 'El ID debe tener 6 caracteres' }),

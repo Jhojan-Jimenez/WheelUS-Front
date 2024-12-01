@@ -17,6 +17,7 @@ const Rides: React.FC = () => {
   const [isStartFilterOpen, setIsStartFilterOpen] = useState(false);
   const [isEndFilterOpen, setIsEndFilterOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
 
   const spots = searchParams.get('spots');
   const startPoint = searchParams.get('start');
@@ -26,13 +27,14 @@ const Rides: React.FC = () => {
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
-      const res = await getAvaliableRides({
+      const { total, rides } = await getAvaliableRides({
         origin: startPoint,
         destination: endPoint,
         seats: spots ? parseInt(spots) : 1,
+        page: Number(page) ? Number(page) : 1,
       });
-
-      setActiveRides(res);
+      setTotal(total);
+      setActiveRides(rides);
       setLoading(false);
     };
     fetchData();
@@ -56,12 +58,6 @@ const Rides: React.FC = () => {
     setCurrentPage(1);
     setIsFilterModalOpen(false);
   };
-
-  // const totalPages = Math.ceil(filteredRides.length / 12);
-  // const paginatedRides = filteredRides.slice(
-  //   (currentPage - 1) * 12,
-  //   currentPage * 12
-  // );
 
   return (
     <div className="p-4 h-full w-full shadow-lg ">
@@ -129,9 +125,9 @@ const Rides: React.FC = () => {
           </div>
         )}
 
-        {activeRides.length > 1 && (
+        {total > 1 && (
           <Index
-            totalPages={activeRides.length}
+            totalRides={total}
             setCurrentPage={setCurrentPage}
             setSearchParams={setSearchParams}
             currentPage={currentPage}

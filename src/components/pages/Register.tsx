@@ -150,13 +150,22 @@ export default function Register() {
           )}
         </div>
       ))}
+      <label htmlFor={'photo'} className="block text-gray-700 mb-2 capitalize">
+        Foto de perfil
+      </label>
       <div className="mb-4">
+        <label
+          htmlFor="photo"
+          className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-xs sm:text-base inline-block"
+        >
+          Subir foto
+        </label>
         <input
           type="file"
           id="photo"
           {...register('photo')}
           accept="image/jpeg, image/png, image/gif"
-          className="text-xs sm:text-base"
+          className="hidden"
         />
       </div>
       {errors.photo && (

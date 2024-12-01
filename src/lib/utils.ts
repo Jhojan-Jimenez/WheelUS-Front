@@ -32,3 +32,20 @@ export function formatFirestoreTimestamp(
   );
   return date.toLocaleString();
 }
+
+export async function reverseGeocodeAndShowMarker(
+  latitude: string,
+  longitude: string
+) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const formattedAddress = data.display_name.split(',').slice(0, 3).join('');
+
+    return formattedAddress;
+  } catch (error) {
+    console.log(error);
+  }
+}

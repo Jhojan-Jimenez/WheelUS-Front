@@ -1,3 +1,6 @@
+import { getDestinations, getOrigins } from '@/lib/api/ride';
+import { useEffect, useState } from 'react';
+
 export const FilterDropdown = ({
   isOpen,
   setIsOpen,
@@ -57,33 +60,47 @@ export const FilterContent = ({
   isSpotFilterOpen: boolean;
   setIsSpotFilterOpen: React.Dispatch<React.SetStateAction<boolean>>;
   applyFilter: (key: string, value: string) => void;
-}) => (
-  <div
-    className={` ${inModal ? 'flex flex-col items-center h-3/4 justify-around' : 'w-full flex gap-2'}`}
-  >
-    <FilterDropdown
-      isOpen={isStartFilterOpen}
-      setIsOpen={setIsStartFilterOpen}
-      applyFilter={applyFilter}
-      title="Punto de inicio"
-      options={['New York', 'Los Angeles', 'Chicago', 'Miami']}
-      filterKey="start"
-    />
-    <FilterDropdown
-      isOpen={isEndFilterOpen}
-      setIsOpen={setIsEndFilterOpen}
-      applyFilter={applyFilter}
-      title="Punto de llegada"
-      options={['Boston', 'San Francisco', 'Detroit', 'Orlando']}
-      filterKey="end"
-    />
-    <FilterDropdown
-      isOpen={isSpotFilterOpen}
-      setIsOpen={setIsSpotFilterOpen}
-      applyFilter={applyFilter}
-      title="Cupos disponibles"
-      options={['1', '2', '3', '4']}
-      filterKey="spots"
-    />
-  </div>
-);
+}) => {
+  const [startPoints, setStartPoints] = useState<string[] | null>(null);
+  const [endPoints, setEndPoints] = useState<string[] | null>(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await getOrigins();
+      setStartPoints(res);
+      const res2 = await getDestinations();
+      setEndPoints(res2);
+    };
+    fetchData();
+  }, []);
+
+  return (
+    <div
+      className={` ${inModal ? 'flex flex-col items-center h-3/4 justify-around' : 'w-full flex gap-2'}`}
+    >
+      <FilterDropdown
+        isOpen={isStartFilterOpen}
+        setIsOpen={setIsStartFilterOpen}
+        applyFilter={applyFilter}
+        title="Punto de inicio"
+        options={startPoints || []}
+        filterKey="start"
+      />
+      <FilterDropdown
+        isOpen={isEndFilterOpen}
+        setIsOpen={setIsEndFilterOpen}
+        applyFilter={applyFilter}
+        title="Punto de llegada"
+        options={endPoints || []}
+        filterKey="end"
+      />
+      <FilterDropdown
+        isOpen={isSpotFilterOpen}
+        setIsOpen={setIsSpotFilterOpen}
+        applyFilter={applyFilter}
+        title="Cupos disponibles"
+        options={['1', '2', '3', '4', '5']}
+        filterKey="spots"
+      />
+    </div>
+  );
+};

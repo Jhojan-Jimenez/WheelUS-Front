@@ -18,7 +18,7 @@ const ChatIcon: React.FC = () => {
     });
   }, []);
   return (
-    <div className="relative inline-block">
+    <div className="relative flex justify-center items-center">
       <svg
         className="w-6 h-6 text-emerald-500 hover:text-emerald-600 transition-colors duration-200"
         fill="none"

@@ -13,6 +13,11 @@ import Chat from './components/pages/Chat';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MyRides from './components/pages/MyRides';
+import Profile from './components/pages/Profile';
+import VehicleRoute from './components/route/VehicleRoute';
+import CreateRide from './components/pages/CreateRide';
+import RoleRoute from './components/route/RoleRoute';
+import MyVehicle from './components/pages/MyVehicle';
 
 function App() {
   return (
@@ -71,6 +76,34 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/myVehicle"
+                  element={
+                    <ProtectedRoute>
+                      <VehicleRoute>
+                        <MyVehicle />
+                      </VehicleRoute>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/myRides/create"
+                  element={
+                    <ProtectedRoute>
+                      <RoleRoute>
+                        <CreateRide />
+                      </RoleRoute>
+                    </ProtectedRoute>
+                  }
+                ></Route>
               </Routes>
             </MainLayout>
           </RoleProvider>

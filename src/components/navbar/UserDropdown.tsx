@@ -47,15 +47,19 @@ const UserDropdown: React.FC = () => {
                     My profile
                   </button>
                 </li>
-                <li>
-                  <button
-                    className="block py-2 px-4 text-sm green-text w-full"
-                    onClick={() => navigate('/account')}
-                  >
-                    Account settings
-                  </button>
-                </li>
               </ul>
+              {user.vehicle_plate && (
+                <ul className="py-1 text-gray-500 " aria-labelledby="dropdown">
+                  <li>
+                    <button
+                      className="block py-2 px-4 text-sm green-text w-full"
+                      onClick={() => navigate('/myVehicle')}
+                    >
+                      My vehicle
+                    </button>
+                  </li>
+                </ul>
+              )}
               <ul className="py-1 text-gray-500 " aria-labelledby="dropdown">
                 <li>
                   <button

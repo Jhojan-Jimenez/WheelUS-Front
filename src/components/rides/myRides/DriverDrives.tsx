@@ -1,63 +1,73 @@
-import React, { useState } from 'react';
-import RideCard from './RideCard';
-
-// Mock data for driver rides
-const driverRides = Array.from({ length: 20 }, (_, i) => ({
-  id: i + 1,
-  from: `City ${i + 1}`,
-  to: `City ${i + 2}`,
-  date: `2023-06-${(i + 1).toString().padStart(2, '0')}`,
-  time: `${Math.floor(Math.random() * 12 + 1)}:${Math.floor(Math.random() * 60)
-    .toString()
-    .padStart(2, '0')} ${Math.random() > 0.5 ? 'AM' : 'PM'}`,
-  seats: Math.floor(Math.random() * 4) + 1,
-  price: Math.floor(Math.random() * 50) + 10,
-}));
+import { useAuth } from '@/hooks/useAuth';
+import { getVehicleRides } from '@/lib/api/vehicle';
+import { RideSchema } from '@/lib/types';
+import React, { useEffect, useState } from 'react';
+import { MoonLoader } from 'react-spinners';
+import DriverRideCard from './DriverRideCard';
+import Link from '@/components/ui/Link';
 
 const DriverRides: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const ridesPerPage = 6;
+  const { user } = useAuth();
+  const [driverRides, setDriverRides] = useState<RideSchema[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const indexOfLastRide = currentPage * ridesPerPage;
-  const indexOfFirstRide = indexOfLastRide - ridesPerPage;
-  const currentRides = driverRides.slice(indexOfFirstRide, indexOfLastRide);
-
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      if (user?.vehicle_plate) {
+        const res = await getVehicleRides(user.vehicle_plate);
+        setDriverRides(res);
+      }
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">
-        Your Created Rides
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {currentRides.map((ride) => (
-          <RideCard key={ride.id} {...ride} isDriverView={true} />
-        ))}
+    <div className="mx-auto px-4 py-8 h-full">
+      <div className="flex justify-between py-6 items-center">
+        <h2 className="text-2xl font-bold text-gray-800">Your Created Rides</h2>
+        <Link href="/myRides/create" className="h-full flex items-center">
+          <p className="hidden green text-white p-2 rounded-md md:block">
+            Crear un viaje
+          </p>
+          <div className="md:hidden green text-white p-1 rounded-md">
+            <svg
+              className="w-6 h-6 "
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              />
+            </svg>
+          </div>
+        </Link>
       </div>
-      <div className="mt-8 flex justify-center">
-        <nav className="inline-flex rounded-md shadow">
-          {Array.from(
-            { length: Math.ceil(driverRides.length / ridesPerPage) },
-            (_, i) => (
-              <button
-                key={i}
-                onClick={() => paginate(i + 1)}
-                className={`px-4 py-2 text-sm font-medium ${
-                  currentPage === i + 1
-                    ? 'bg-emerald-500 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                } ${i === 0 ? 'rounded-l-md' : ''} ${
-                  i === Math.ceil(driverRides.length / ridesPerPage) - 1
-                    ? 'rounded-r-md'
-                    : ''
-                }`}
-              >
-                {i + 1}
-              </button>
-            )
+
+      {loading ? (
+        <div className="loading-layout">
+          <MoonLoader />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {driverRides && driverRides.length > 0 ? (
+            driverRides.map((ride, index) => (
+              <DriverRideCard
+                key={index}
+                ride={ride}
+                setDriverRides={setDriverRides}
+              />
+            ))
+          ) : (
+            <div>Crea un viaje para que aparezca aquí</div>
           )}
-        </nav>
-      </div>
+        </div>
+      )}
     </div>
   );
 };

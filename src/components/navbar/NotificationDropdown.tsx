@@ -2,16 +2,18 @@ import { useOpen } from '@/hooks/useOpen';
 import { NotificationSchema } from '@/lib/types';
 import BellIcon from '../ui/BellIcon';
 import { useEffect, useState } from 'react';
-import { userNotifications } from '@/lib/api/chat';
 import { formatDateFront } from '@/lib/utils';
+import { deleteUserNotification, userNotifications } from '@/lib/api/user';
 
 const NotificationDropdown: React.FC = () => {
   const { isOpen, toggle: toggleDropdown, ref } = useOpen();
+  const [notificationCount, setNotificationCount] = useState(0);
   const [notifications, setNotifications] = useState<NotificationSchema[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       const res = await userNotifications();
       setNotifications(res);
+      setNotificationCount(res.length);
     };
     fetchData();
   }, [notifications]);
@@ -23,7 +25,10 @@ const NotificationDropdown: React.FC = () => {
         onClick={toggleDropdown}
         className="p-2 mr-1 text-gray-500 rounded-lg "
       >
-        <BellIcon />
+        <BellIcon
+          notificationCount={notificationCount}
+          setNotificationCount={setNotificationCount}
+        />
       </button>
       {isOpen && (
         <div
@@ -34,9 +39,21 @@ const NotificationDropdown: React.FC = () => {
             Notifications
           </div>
           <div className="bg-white max-h-[50vh] overflow-y-auto relative">
-            {notifications.map((notification, index) => {
-              return <Notification key={index} notification={notification} />;
-            })}
+            {notificationCount > 0 ? (
+              notifications.map((notification, index) => {
+                return (
+                  <Notification
+                    key={index}
+                    notification={notification}
+                    index={index}
+                  />
+                );
+              })
+            ) : (
+              <div className="flex justify-center items-center h-32">
+                <p className="text-gray-500">No notifications yet</p>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -46,8 +63,10 @@ const NotificationDropdown: React.FC = () => {
 
 const Notification = ({
   notification,
+  index,
 }: {
   notification: NotificationSchema;
+  index: number;
 }) => {
   return (
     <div className="hover:bg-slate-50 ">
@@ -58,7 +77,7 @@ const Notification = ({
             src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png"
             alt="Bonnie Green avatar"
           />
-          <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 rounded-full border border-white bg-primary-700 ">
+          <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 rounded-full border border-white bg-primary-700">
             <svg
               className="w-2 h-2 text-white"
               aria-hidden="true"
@@ -84,7 +103,7 @@ const Notification = ({
           </div>
         </div>
         <button
-          onClick={() => alert('Cerrar notificación')} // Aquí puedes agregar la lógica para cerrar
+          onClick={async () => await deleteUserNotification(index)}
           className="relative top-0 right-0 text-gray-400 hover:text-gray-600 focus:outline-none"
         >
           <svg

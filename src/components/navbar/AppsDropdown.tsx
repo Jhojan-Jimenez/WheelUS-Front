@@ -1,5 +1,6 @@
 import React from 'react';
 import { useOpen } from '@/hooks/useOpen';
+import Link from '../ui/Link';
 
 const AppsDropdown: React.FC = () => {
   const { isOpen, toggle: toggleDropdown, ref } = useOpen();
@@ -30,11 +31,11 @@ const AppsDropdown: React.FC = () => {
           <div className="block py-2 px-4 font-medium text-center text-gray-700 bg-gray-100 ">
             Apps
           </div>
-          <div className="grid grid-cols-3 gap-4 p-4 bg-white">
+          <div className="flex justify-center items-center gap-4 p-4 bg-white">
+            <AppItem href="/myRides" tittle="Mis viajes" />
+            {/* <AppItem />
             <AppItem />
-            <AppItem />
-            <AppItem />
-            <AppItem />
+            <AppItem /> */}
           </div>
         </div>
       )}
@@ -42,23 +43,31 @@ const AppsDropdown: React.FC = () => {
   );
 };
 
-const AppItem: React.FC = () => {
+const AppItem = ({
+  href,
+  icon = 'http://www.w3.org/2000/svg',
+  tittle,
+}: {
+  href: string;
+  icon?: string;
+  tittle: string;
+}) => {
   return (
-    <a
-      href="#"
+    <Link
+      href={href}
       className="block p-4 text-center rounded-lg hover:bg-slate-50  group"
     >
       <svg
         className="mx-auto mb-2 w-5 h-5 text-gray-400 group-hover:text-gray-500 "
         aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
+        xmlns={icon}
         fill="currentColor"
         viewBox="0 0 18 20"
       >
         <path d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z" />
       </svg>
-      <div className="text-sm font-medium text-gray-900 ">Sales</div>
-    </a>
+      <div className="text-sm font-medium text-gray-900 ">{tittle}</div>
+    </Link>
   );
 };
 export default AppsDropdown;

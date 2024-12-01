@@ -21,6 +21,10 @@ import { getVehicleByPlate } from '@/lib/api/vehicle';
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const resActualUser = localStorage.getItem('user');
   const actualUser = resActualUser ? JSON.parse(resActualUser) : null;
+  const resActualUserVehicle = sessionStorage.getItem('vehicle');
+  const actualUserVehicle = resActualUserVehicle
+    ? JSON.parse(resActualUserVehicle)
+    : null;
   const navigate = useNavigate();
   const [user, _setUser] = useState(actualUser);
   const setUser = useCallback((newUser: typeof user) => {
@@ -31,7 +35,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.removeItem('user');
     }
   }, []);
-  const [vehicle, setVehicle] = useState<VehicleSchema | null>(null);
+  const [vehicle, setVehicle] = useState<VehicleSchema | null>(
+    actualUserVehicle
+  );
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -42,13 +48,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           await setLocalStorageUser(token, setUser, setVehicle);
         }
       }
-      if (user.vehicle_plate !== undefined) {
+      if (user.vehicle_plate !== undefined && !vehicle) {
         const carData = await getVehicleByPlate(user.vehicle_plate);
         sessionStorage.setItem('vehicle', JSON.stringify(carData));
       }
     };
     fetchUser();
-  }, [user, setUser]);
+  }, [user]);
 
   if (loading) {
     return <GeneralLoader message="Cargando información..." />;

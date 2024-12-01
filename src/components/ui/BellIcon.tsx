@@ -1,16 +1,17 @@
-import { userNotifications } from '@/lib/api/chat';
 import socket from '@/lib/api/Config';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
-const BellIcon: React.FC = () => {
-  const [notificationCount, setNotificationCount] = useState(0);
+interface BellIconProps {
+  notificationCount: number;
+  setNotificationCount: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const BellIcon: React.FC<BellIconProps> = ({
+  notificationCount,
+  setNotificationCount,
+}) => {
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await userNotifications();
-      setNotificationCount(res.length);
-    };
-    fetchData();
     socket.on('appNotification', (mes) => {
       toast.info(mes);
 
@@ -18,7 +19,7 @@ const BellIcon: React.FC = () => {
     });
   }, []);
   return (
-    <div className="relative inline-block">
+    <div className="relative flex justify-center items-center">
       <svg
         className="w-6 h-6 text-emerald-500 hover:text-emerald-600 transition-colors duration-200"
         fill="none"

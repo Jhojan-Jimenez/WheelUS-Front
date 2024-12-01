@@ -46,6 +46,7 @@ export interface NotificationSchema {
 }
 
 export interface RideSchema {
+  rideId: string;
   available_seats: number;
   departure: string;
   destination: string;
@@ -53,6 +54,16 @@ export interface RideSchema {
   isActive: boolean;
   origin: string;
   passengers: string[];
+  route: string[];
+  vehicle_plate: string;
+  point?: string;
+}
+export interface CreateRideSchema {
+  available_seats: number;
+  departure: Date;
+  destination: string;
+  fee: number;
+  origin: string;
   route: string[];
   vehicle_plate: string;
 }

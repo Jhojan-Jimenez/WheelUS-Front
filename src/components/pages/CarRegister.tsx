@@ -39,6 +39,8 @@ export default function CarRegister() {
         navigate('/rides');
       }
     } catch (error) {
+      console.log(error);
+
       let validateErros = '';
       if (isAxiosError(error) && error.response?.data?.errors) {
         validateErros = normalizeValidationBackErrors(
@@ -155,14 +157,20 @@ export default function CarRegister() {
       <label htmlFor={'soat'} className="block text-gray-700 mb-2 capitalize">
         SOAT
       </label>
+
       <div className="mb-4">
+        <label
+          htmlFor="soat"
+          className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-xs sm:text-base inline-block"
+        >
+          Subir imagen
+        </label>
         <input
           type="file"
           id="soat"
           {...register('soat')}
           accept="image/jpeg, image/png, image/gif"
-          className="text-xs sm:text-base"
-          required
+          className="hidden"
         />
       </div>
       {errors.soat && (
@@ -178,13 +186,18 @@ export default function CarRegister() {
         Foto Vehículo
       </label>
       <div className="mb-4">
+        <label
+          htmlFor="vehiclePhoto"
+          className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-xs sm:text-base inline-block"
+        >
+          Subir imagen
+        </label>
         <input
           type="file"
           id="vehiclePhoto"
           {...register('vehiclePhoto')}
           accept="image/jpeg, image/png, image/gif"
-          className="text-xs sm:text-base"
-          required
+          className="hidden"
         />
       </div>
       {errors.vehiclePhoto && (

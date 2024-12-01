@@ -1,5 +1,4 @@
 import { api, setAuthHeader } from './Config';
-import { getUserByToken } from './user';
 
 export async function getUserChats() {
   setAuthHeader();
@@ -35,8 +34,4 @@ export async function unreadChatNotifications() {
   setAuthHeader();
   const res = await api.get('/chat/user-notifications');
   return res.data.chats;
-}
-export async function userNotifications() {
-  const res = await getUserByToken();
-  return res.notifications;
 }

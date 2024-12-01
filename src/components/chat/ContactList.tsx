@@ -101,9 +101,12 @@ const ContactList: React.FC<ContactListProps> = ({
         <h2 className="text-xl font-semibold p-4 border-b border-gray-200">
           Chats
         </h2>
-        <button className="px-2" onClick={() => setOpenSearchModal(true)}>
+        <button
+          className="my-2  text-gray-600 p-1 rounded-md"
+          onClick={() => setOpenSearchModal(true)}
+        >
           <svg
-            className="w-6 h-6 text-gray-600"
+            className="w-6 h-6 "
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

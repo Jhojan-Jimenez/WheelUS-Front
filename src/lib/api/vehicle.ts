@@ -62,12 +62,11 @@ export async function getVehicleByPlate(plate: string) {
   }
 }
 
-// export async function getVehicleRides(plate) {
-//   setAuthHeader(); // Ensure the header is set before the request
-
-//   const res = await api.get(`/vehicle/${plate}/rides`);
-//   return res.data.vehicleRides;
-// }
+export async function getVehicleRides(plate: string) {
+  setAuthHeader();
+  const res = await api.get(`/vehicle/${plate}/rides`);
+  return res.data.vehicleRides;
+}
 
 // export async function deleteVehicle(plate) {
 //   setAuthHeader();
