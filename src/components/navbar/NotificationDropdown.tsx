@@ -3,7 +3,12 @@ import { NotificationSchema } from '@/lib/types';
 import BellIcon from '../ui/BellIcon';
 import { useEffect, useState } from 'react';
 import { formatDateFront } from '@/lib/utils';
-import { deleteUserNotification, userNotifications } from '@/lib/api/user';
+import {
+  deleteUserNotifications,
+  deleteUserNotification,
+  userNotifications,
+} from '@/lib/api/user';
+import { Trash2Icon } from 'lucide-react';
 
 const NotificationDropdown: React.FC = () => {
   const { isOpen, toggle: toggleDropdown, ref } = useOpen();
@@ -36,7 +41,12 @@ const NotificationDropdown: React.FC = () => {
           ref={ref}
         >
           <div className="block py-2 px-4 font-medium text-center text-gray-700 bg-gray-100 ">
-            Notifications
+            <div className="flex justify-between">
+              Notifications
+              <button onClick={async () => await deleteUserNotifications()}>
+                <Trash2Icon />
+              </button>
+            </div>
           </div>
           <div className="bg-white max-h-[50vh] overflow-y-auto relative">
             {notificationCount > 0 ? (

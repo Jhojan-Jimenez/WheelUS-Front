@@ -1,25 +1,30 @@
 import { useAuth } from '@/hooks/useAuth';
-import { getVehicleByPlate } from '@/lib/api/vehicle';
-import React, { useState, ChangeEvent, useEffect } from 'react';
+import { useLoading } from '@/hooks/useLoading';
+import { getVehicleByPlate, modifyVehicle } from '@/lib/api/vehicle';
+import { vehicleModifySchema } from '@/lib/formValidators';
+import { vehicleModifyData, VehicleSchema } from '@/lib/types';
+import { normalizeValidationBackErrors } from '@/lib/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { isAxiosError } from 'axios';
+import { useState, ChangeEvent, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import Swal from 'sweetalert2';
 
-interface VehicleSchema {
-  SOAT: string;
-  brand: string;
-  id_driver: string;
-  model: string;
-  photo: string;
-  plate: string;
-  rides: string[];
-  seats: string;
-}
-
-const MyVehicle = () => {
+export default function MyVehicle() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<vehicleModifyData>({
+    resolver: zodResolver(vehicleModifySchema),
+  });
   const [editedVehicle, setEditedVehicle] = useState<Partial<VehicleSchema>>(
     {}
   );
   const [soatPreview, setSoatPreview] = useState<string | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [vehicle, setVehicle] = useState<VehicleSchema | null>(null);
+  const { setLoading } = useLoading();
   const { user } = useAuth();
   useEffect(() => {
     const fetchData = async () => {
@@ -32,26 +37,59 @@ const MyVehicle = () => {
   }, []);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target;
+    const { id, value, files } = e.target;
+
     if (files && files.length > 0) {
       const file = files[0];
       const reader = new FileReader();
       reader.onloadend = () => {
-        if (name === 'SOAT') {
+        if (id === 'SOAT') {
           setSoatPreview(reader.result as string);
-        } else if (name === 'photo') {
+        } else if (id === 'vehiclePhoto') {
           setPhotoPreview(reader.result as string);
         }
-        setEditedVehicle((prev) => ({ ...prev, [name]: file }));
+        setEditedVehicle((prev) => ({ ...prev, [id]: file }));
       };
       reader.readAsDataURL(file);
     } else {
-      setEditedVehicle((prev) => ({ ...prev, [name]: value }));
+      setEditedVehicle((prev) => ({ ...prev, [id]: value }));
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: vehicleModifyData) => {
+    setLoading(true);
+    try {
+      if (vehicle?.plate) {
+        await modifyVehicle(data, vehicle.plate);
+      }
+      Swal.fire({
+        title: 'Excelente!',
+        text: 'Cambios Realizados Correctamente',
+        icon: 'success',
+      });
+    } catch (error) {
+      let validateErrors = '';
+      if (isAxiosError(error) && error?.response?.data.errors) {
+        validateErrors = normalizeValidationBackErrors(
+          error.response.data.errors
+        );
+      }
+      if (isAxiosError(error)) {
+        Swal.fire({
+          title: 'Error!',
+          text: `${error?.response?.data.message} ${validateErrors}`,
+          icon: 'error',
+        });
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Error del servidor',
+          icon: 'error',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -59,57 +97,71 @@ const MyVehicle = () => {
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
         Edit Vehicle Information
       </h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label
-              htmlFor="plate"
+              htmlFor="model"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Plate Number
+              Model
             </label>
             <input
               type="text"
-              id="plate"
-              name="plate"
-              value={editedVehicle.plate || vehicle?.plate || ''}
+              id="model"
+              {...register('model', { onChange: handleInputChange })}
+              defaultValue={editedVehicle.model || vehicle?.model || ''}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
+            {errors.model && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.model?.message as string}
+              </p>
+            )}
           </div>
           <div>
             <label
-              htmlFor="seats"
+              htmlFor="brand"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Number of Seats
+              Brand
             </label>
             <input
-              type="number"
-              id="seats"
-              name="seats"
-              value={editedVehicle.seats || vehicle?.seats || ''}
+              type="text"
+              id="brand"
+              {...register('brand', { onChange: handleInputChange })}
+              defaultValue={editedVehicle.brand || vehicle?.brand || ''}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
+            {errors.brand && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.brand?.message as string}
+              </p>
+            )}
           </div>
         </div>
 
         <div>
           <label
             htmlFor="SOAT"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-xs sm:text-base inline-block mb-2"
           >
             SOAT Document
           </label>
           <input
             type="file"
             id="SOAT"
-            name="SOAT"
-            accept="image/*"
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            {...register('soat', { onChange: handleInputChange })}
+            accept="image/jpeg, image/png, image/gif"
+            className="hidden"
           />
+          {errors.soat && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.soat?.message as string}
+            </p>
+          )}
           {(soatPreview || vehicle?.SOAT) && (
             <img
               src={soatPreview || vehicle?.SOAT}
@@ -118,26 +170,29 @@ const MyVehicle = () => {
             />
           )}
         </div>
-
         <div>
           <label
-            htmlFor="photo"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            htmlFor="vehiclePhoto"
+            className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-xs sm:text-base inline-block mb-2"
           >
-            Foto del carro
+            Vehicle Photo
           </label>
           <input
             type="file"
-            id="photo"
-            name="photo"
-            accept="image/*"
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            id="vehiclePhoto"
+            {...register('vehiclePhoto', { onChange: handleInputChange })}
+            accept="image/jpeg, image/png, image/gif"
+            className="hidden"
           />
+          {errors.vehiclePhoto && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.vehiclePhoto?.message as string}
+            </p>
+          )}
           {(photoPreview || vehicle?.photo) && (
             <img
               src={photoPreview || vehicle?.photo}
-              alt="Vehicle Preview"
+              alt="SOAT Preview"
               className="mt-2 max-w-full h-auto rounded-md"
             />
           )}
@@ -146,10 +201,10 @@ const MyVehicle = () => {
         <div className="flex justify-between items-center">
           <div>
             <p className="text-sm text-gray-600">
-              Brand: {vehicle?.brand || ''}
+              Seats: {vehicle?.seats || ''}
             </p>
             <p className="text-sm text-gray-600">
-              Model: {vehicle?.model || ''}
+              Plate: {vehicle?.plate || ''}
             </p>
           </div>
           <button
@@ -162,6 +217,4 @@ const MyVehicle = () => {
       </form>
     </div>
   );
-};
-
-export default MyVehicle;
+}

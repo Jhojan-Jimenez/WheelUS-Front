@@ -1,19 +1,22 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronLeft } from 'lucide-react';
-
 import { useForm } from 'react-hook-form';
 import Link from '../ui/Link';
-// import { useAuth } from '@/hooks/useAuth';
-// import { useNavigate } from 'react-router-dom';
-// import { useLoading } from '@/hooks/useLoading';
 import { userModifySchema } from '@/lib/formValidators';
-import { userModifyData } from '@/lib/types';
+import { userModifyData, UserSchema } from '@/lib/types';
 import { useAuth } from '@/hooks/useAuth';
+import { ChangeEvent, useState } from 'react';
+import { useLoading } from '@/hooks/useLoading';
+import { modifyUser } from '@/lib/api/user';
+import Swal from 'sweetalert2';
+import { isAxiosError } from 'axios';
+import { normalizeValidationBackErrors } from '@/lib/utils';
 
 export default function Profile() {
-  const { user } = useAuth();
-  //   const navigate = useNavigate();
-  //   const { setLoading } = useLoading();
+  const { user, setUser } = useAuth();
+  const [editedProfile, setEditedProfile] = useState<Partial<UserSchema>>({});
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const { setLoading } = useLoading();
   const {
     register,
     handleSubmit,
@@ -21,66 +24,84 @@ export default function Profile() {
   } = useForm<userModifyData>({
     resolver: zodResolver(userModifySchema),
   });
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value, files } = e.target;
+    if (files && files.length > 0) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (name === 'photo') {
+          setPhotoPreview(reader.result as string);
+        }
+        setEditedProfile((prev) => ({ ...prev, [name]: file }));
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setEditedProfile((prev) => ({ ...prev, [name]: value }));
+    }
+  };
 
   const onSubmit = async (data: userModifyData) => {
-    console.log(data);
-
-    // setLoading(true);
-    // try {
-    //   const patchUser = await modifyUser(data, user.id);
-    //   setUser(patchUser);
-    //   Swal.fire({
-    //     title: 'Excelente!',
-    //     text: 'Cambios Realizados Correctamente',
-    //     icon: 'success',
-    //   });
-    //   router.push('/dashboard');
-    // } catch (error) {
-    //   let validateErrors = '';
-    //   if (error.response.data.errors) {
-    //     validateErrors = errorsMes(error.response.data.errors);
-    //   }
-    //   if (isAxiosError(error)) {
-    //     Swal.fire({
-    //       title: 'Error!',
-    //       text: `${error.response.data.message} ${validateErrors}`,
-    //       icon: 'error',
-    //     });
-    //   } else {
-    //     Swal.fire({
-    //       title: 'Error!',
-    //       text: 'Error del servidor',
-    //       icon: 'error',
-    //     });
-    //   }
-    // } finally {
-    //   setLoading(false);
-    // }
+    setLoading(true);
+    try {
+      if (user?.id) {
+        const patchUser = await modifyUser(data, user.id);
+        if (patchUser) {
+          setUser(patchUser);
+          Swal.fire({
+            title: 'Excelente!',
+            text: 'Cambios Realizados Correctamente',
+            icon: 'success',
+          });
+        }
+      }
+    } catch (error) {
+      let validateErrors = '';
+      if (isAxiosError(error) && error?.response?.data.errors) {
+        validateErrors = normalizeValidationBackErrors(
+          error.response.data.errors
+        );
+      }
+      if (isAxiosError(error)) {
+        Swal.fire({
+          title: 'Error!',
+          text: `${error?.response?.data.message} ${validateErrors}`,
+          icon: 'error',
+        });
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Error del servidor',
+          icon: 'error',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <section className=" w-full h-fit flex gap-4 justify-center items-center sm:items-start p-10 flex-col sm:flex-row">
+    <section className=" mx-auto h-fit flex gap-4 justify-center items-center sm:items-start p-10 flex-col w-full max-w-6xl  ">
       <section className="flex flex-col justify-start items-start gap-4">
         <Link className="text-gray-400 hover:text-gray-800 flex" href="/rides">
           <ChevronLeft /> Volver
         </Link>
-        <div className="flex flex-col justify-center items-center gap-4">
-          <img
-            src={user?.photo || '/images/anonym.png'}
-            alt="Picture of the author"
-            width={500}
-            height={500}
-            className="rounded-full object-cover max-w-[220px] max-h-[220px] min-w-[220px] min-h-[220px] border-2 sm:min-w-[260px] sm:max-w-[260px] sm:min-h-[260px] sm:max-h-[260px] cursor-pointer  border-[#025C31] "
-          />
-        </div>
       </section>
 
-      <section>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="w-full p-4 rounded-lg"
-          encType="multipart/form-data"
-        >
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className=" p-4 flex flex-col lg:flex-row items-center 2xl:gap-10 mx-auto "
+        encType="multipart/form-data"
+      >
+        <div className="flex flex-1 flex-col justify-center items-center gap-4 rounded-full border-2 border-[#025C31] overflow-hidden w-96 h-96 2xl:w-[500px] 2xl:h-[500px]">
+          <img
+            src={photoPreview || user?.photo || '/images/anonym.png'}
+            alt="Picture of the author"
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        <div>
           {(['name', 'lastname', 'contact'] as const).map((field) => (
             <div key={field} className="mb-2">
               <label htmlFor={field} className="text-gray-700 my-5 capitalize">
@@ -98,11 +119,11 @@ export default function Profile() {
                 {...register(field)}
                 defaultValue={`${
                   field === 'contact'
-                    ? user?.contact
+                    ? editedProfile.contact || user?.contact
                     : field === 'name'
-                      ? user?.name
+                      ? editedProfile.name || user?.name
                       : field === 'lastname'
-                        ? user?.lastname
+                        ? editedProfile.lastname || user?.lastname
                         : ''
                 }`}
                 className="w-full px-3 py-2 border rounded-lg"
@@ -124,7 +145,7 @@ export default function Profile() {
             <input
               type="file"
               id="photo"
-              {...register('photo')}
+              {...register('photo', { onChange: handleInputChange })}
               accept="image/jpeg, image/png, image/gif"
               className="hidden"
             />
@@ -142,8 +163,8 @@ export default function Profile() {
           >
             Guardar Cambios
           </button>
-        </form>
-      </section>
+        </div>
+      </form>
     </section>
   );
 }

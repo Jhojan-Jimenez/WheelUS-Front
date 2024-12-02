@@ -21,7 +21,7 @@ const UserDropdown: React.FC = () => {
             <span className="sr-only">Open user menu</span>
             <img
               className="w-8 h-8 rounded-full"
-              src={user.photo}
+              src={user?.photo}
               alt="user photo"
             />
           </button>

@@ -1,5 +1,5 @@
 import { api, setAuthHeader } from './Config';
-import { vehicleRegData } from '../types';
+import { vehicleModifyData, vehicleRegData } from '../types';
 
 export async function createVehicle(
   newData: vehicleRegData,
@@ -30,27 +30,34 @@ export async function createVehicle(
   await api.post('/vehicle/', formData, config);
 }
 
-// export async function modifyVehicle(updateData, plate) {
-//   const config = {
-//     headers: {
-//       'Content-Type': 'multipart/form-data',
-//     },
-//   };
-//   setAuthHeader();
-//   const { brand, model, vehiclePhoto, soat } = updateData;
-//   const formData = new FormData();
-//   formData.append('brand', brand);
-//   formData.append('model', model);
-//   if (vehiclePhoto && vehiclePhoto.length > 0) {
-//     formData.append('vehiclePhoto', vehiclePhoto[0]);
-//   }
-//   if (soat && soat.length > 0) {
-//     formData.append('soat', soat[0]);
-//   }
+export async function modifyVehicle(
+  updateData: vehicleModifyData,
+  plate: string
+) {
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  };
+  setAuthHeader();
+  const { brand, model, vehiclePhoto, soat } = updateData;
+  const formData = new FormData();
+  if (brand) {
+    formData.append('brand', brand);
+  }
+  if (model) {
+    formData.append('model', model);
+  }
+  if (vehiclePhoto && vehiclePhoto.length > 0) {
+    formData.append('vehiclePhoto', vehiclePhoto[0]);
+  }
+  if (soat && soat.length > 0) {
+    formData.append('soat', soat[0]);
+  }
 
-//   const res = await api.patch(`/vehicle/${plate}`, formData, config);
-//   return res;
-// }
+  const res = await api.patch(`/vehicle/${plate}`, formData, config);
+  return res;
+}
 
 export async function getVehicleByPlate(plate: string) {
   setAuthHeader();

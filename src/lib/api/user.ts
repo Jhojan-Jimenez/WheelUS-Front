@@ -1,3 +1,4 @@
+import { userModifyData, UserSchema } from '../types';
 import { api, setAuthHeader } from './Config';
 
 export async function getNotifications() {
@@ -14,6 +15,27 @@ export async function getUserByToken() {
   setAuthHeader();
   const res = await api.get('/user/');
   return res.data.user;
+}
+
+export async function modifyUser(newData: userModifyData, userId: string) {
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  };
+  const { name, lastname, contact, photo } = newData;
+  const formData = new FormData();
+  if (name) formData.append('name', name);
+  if (lastname) formData.append('lastname', lastname);
+  if (contact) formData.append('contact', contact);
+  if (photo && photo.length > 0) {
+    formData.append('profilePhoto', photo[0]);
+  }
+  const res = await api.patch(`user/${userId}`, formData, config);
+  if (res.status === 200) {
+    const newDataUser: UserSchema = await getUserByToken();
+    return newDataUser;
+  }
 }
 export async function getUserRides(id: string) {
   setAuthHeader();
@@ -50,4 +72,8 @@ export async function userNotifications() {
 export async function deleteUserNotification(notificationIndex: number) {
   setAuthHeader();
   await api.delete(`/user/${String(notificationIndex)}/notifications`);
+}
+export async function deleteUserNotifications() {
+  setAuthHeader();
+  await api.delete('/user/notifications');
 }

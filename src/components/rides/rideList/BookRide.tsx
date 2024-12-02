@@ -1,5 +1,6 @@
 import { useAuth } from '@/hooks/useAuth';
 import { useLoading } from '@/hooks/useLoading';
+import { useRole } from '@/hooks/useRol';
 import { addBookingRide } from '@/lib/api/user';
 import { RideSchema } from '@/lib/types';
 import { isAxiosError } from 'axios';
@@ -19,7 +20,7 @@ const BookRide: React.FC<StopSelectorProps> = ({ availableStops, ride }) => {
   const addStop = (stop: string) => {
     setSelectedStops((prev) => [...prev, stop]);
   };
-
+  const { setCurrentRole } = useRole();
   const removeStop = (index: number) => {
     setSelectedStops((prev) => prev.filter((_, i) => i !== index));
   };
@@ -36,6 +37,7 @@ const BookRide: React.FC<StopSelectorProps> = ({ availableStops, ride }) => {
         icon: 'success',
       });
       setLoading(false);
+      setCurrentRole('passenger');
       navigate('/myRides');
     } catch (error) {
       if (isAxiosError(error)) {

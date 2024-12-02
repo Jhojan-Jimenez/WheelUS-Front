@@ -11,7 +11,7 @@ export type userRegData = z.infer<typeof userRegSchema>;
 export type userLogData = z.infer<typeof userLogSchema>;
 export type userModifyData = z.infer<typeof userModifySchema>;
 export type vehicleRegData = z.infer<typeof vehicleRegSchema>;
-export type vehicelModifyData = z.infer<typeof vehicleModifySchema>;
+export type vehicleModifyData = z.infer<typeof vehicleModifySchema>;
 export interface AuthContextType {
   user: UserSchema | null;
   vehicle: VehicleSchema | null;
