@@ -2,6 +2,7 @@ import React from 'react';
 import { useOpen } from '@/hooks/useOpen';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import anonym from '@/assets/anonym.png';
 
 const UserDropdown: React.FC = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const UserDropdown: React.FC = () => {
             <span className="sr-only">Open user menu</span>
             <img
               className="w-8 h-8 rounded-full"
-              src={user?.photo}
+              src={user?.photo || anonym}
               alt="user photo"
             />
           </button>

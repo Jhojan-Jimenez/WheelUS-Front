@@ -64,7 +64,9 @@ export async function getVehicleByPlate(plate: string) {
   try {
     const res = await api.get(`/vehicle/${plate}`);
     return res.data.vehicle;
-  } catch {
+  } catch (error) {
+    console.log(error);
+
     return null;
   }
 }

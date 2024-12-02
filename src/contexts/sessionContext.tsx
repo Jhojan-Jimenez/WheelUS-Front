@@ -47,10 +47,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (token) {
           await setLocalStorageUser(token, setUser, setVehicle);
         }
-      }
-      if (user.vehicle_plate !== undefined && !vehicle) {
-        const carData = await getVehicleByPlate(user.vehicle_plate);
-        sessionStorage.setItem('vehicle', JSON.stringify(carData));
+      } else {
+        if (user.vehicle_plate !== undefined && !vehicle) {
+          const carData = await getVehicleByPlate(user.vehicle_plate);
+          sessionStorage.setItem('vehicle', JSON.stringify(carData));
+        }
       }
     };
     fetchUser();

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ContactList from '../chat/ContactList';
 import ChatWindow from '../chat/ChatWindow';
-import socket from '@/lib/api/Config';
+import { getSocket } from '@/lib/api/Config';
 import { ChatSchema, MessageSchema } from '@/lib/types';
 import {
   getChatById,
@@ -42,6 +42,7 @@ const Chat: React.FC = () => {
       }
     };
     fetchChatData();
+    const socket = getSocket();
     socket.on('privateMessage', async (message: MessageSchema) => {
       const res = await getUserChats();
       if (
@@ -76,7 +77,7 @@ const Chat: React.FC = () => {
     const newMessage = await postMessage(toUserId, message);
 
     setMessages((prev) => [...prev, newMessage]);
-
+    const socket = getSocket();
     socket.emit('privateMessage', { toUserId, message: newMessage });
   };
 

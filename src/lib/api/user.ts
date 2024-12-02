@@ -67,7 +67,11 @@ export async function deleteBookingRide(
 }
 export async function userNotifications() {
   const res = await getUserByToken();
-  return res.notifications;
+  if (res.notifications) {
+    return res.notifications;
+  }
+
+  return [];
 }
 export async function deleteUserNotification(notificationIndex: number) {
   setAuthHeader();

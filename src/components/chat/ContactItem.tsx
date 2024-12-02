@@ -1,7 +1,7 @@
 import { useAuth } from '@/hooks/useAuth';
 import useLoad from '@/hooks/useLoad';
 import { readChat } from '@/lib/api/chat';
-import socket from '@/lib/api/Config';
+import { getSocket } from '@/lib/api/Config';
 import { getUserById } from '@/lib/api/user';
 import { ChatSchema, MessageSchema, UserSchema } from '@/lib/types';
 import { useEffect, useState } from 'react';
@@ -31,6 +31,7 @@ export default function ContactItem({
       setContactUser(res);
     };
     fetchContactData();
+    const socket = getSocket();
     socket.on('privateMessage', async (message: MessageSchema) => {
       if (String(message.chatId) === String(chat.chatId)) {
         setUnreadCount((prev: number) => prev + 1);

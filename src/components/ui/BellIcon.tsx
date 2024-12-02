@@ -1,4 +1,4 @@
-import socket from '@/lib/api/Config';
+import { getSocket } from '@/lib/api/Config';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
@@ -12,6 +12,7 @@ const BellIcon: React.FC<BellIconProps> = ({
   setNotificationCount,
 }) => {
   useEffect(() => {
+    const socket = getSocket();
     socket.on('appNotification', (mes) => {
       toast.info(mes);
 

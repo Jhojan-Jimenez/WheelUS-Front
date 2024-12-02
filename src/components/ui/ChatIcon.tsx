@@ -1,5 +1,5 @@
 import { unreadChatNotifications } from '@/lib/api/chat';
-import socket from '@/lib/api/Config';
+import { getSocket } from '@/lib/api/Config';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -11,6 +11,7 @@ const ChatIcon: React.FC = () => {
       setNotificationCount(res);
     };
     fetchData();
+    const socket = getSocket();
     socket.on('chatNotification', (mes) => {
       toast.info(mes);
 
