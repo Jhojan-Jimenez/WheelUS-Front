@@ -12,11 +12,15 @@ const ChatIcon: React.FC = () => {
     };
     fetchData();
     const socket = getSocket();
-    socket.on('chatNotification', (mes) => {
-      toast.info(mes);
+    if (socket) {
+      socket.on('chatNotification', (mes: string) => {
+        toast.info(mes);
 
-      setNotificationCount((prev) => prev + 1);
-    });
+        setNotificationCount((prev) => prev + 1);
+      });
+    } else {
+      console.log('Problema con socket en chatICon');
+    }
   }, []);
   return (
     <div className="relative flex justify-center items-center">

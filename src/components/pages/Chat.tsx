@@ -43,28 +43,34 @@ const Chat: React.FC = () => {
     };
     fetchChatData();
     const socket = getSocket();
-    socket.on('privateMessage', async (message: MessageSchema) => {
-      const res = await getUserChats();
-      if (
-        !res.find((chat: ChatSchema) => chat.chatId === String(message.chatId))
-      ) {
-        const res = await getChatById(String(message.chatId));
-        setChats((prevChats) => [...prevChats, res]);
-      } else {
-        setChats((prevChats) => {
-          return prevChats;
-        });
-      }
+    if (socket) {
+      socket.on('privateMessage', async (message: MessageSchema) => {
+        const res = await getUserChats();
+        if (
+          !res.find(
+            (chat: ChatSchema) => chat.chatId === String(message.chatId)
+          )
+        ) {
+          const res = await getChatById(String(message.chatId));
+          setChats((prevChats) => [...prevChats, res]);
+        } else {
+          setChats((prevChats) => {
+            return prevChats;
+          });
+        }
 
-      if (selectedChat?.chatId === String(message.chatId)) {
-        setMessages((prev) => [...prev, message]);
-      }
+        if (selectedChat?.chatId === String(message.chatId)) {
+          setMessages((prev) => [...prev, message]);
+        }
 
-      console.log('Mensaje recibido:', message);
-    });
+        console.log('Mensaje recibido:', message);
+      });
+    } else {
+      console.log('Problema socket en chat');
+    }
 
     return () => {
-      socket.off('message');
+      socket?.off('message');
     };
   }, [selectedChat, user]);
 
@@ -78,7 +84,11 @@ const Chat: React.FC = () => {
 
     setMessages((prev) => [...prev, newMessage]);
     const socket = getSocket();
-    socket.emit('privateMessage', { toUserId, message: newMessage });
+    if (socket) {
+      socket.emit('privateMessage', { toUserId, message: newMessage });
+    } else {
+      console.log('Problema socket en chat');
+    }
   };
 
   return (

@@ -32,16 +32,20 @@ export default function ContactItem({
     };
     fetchContactData();
     const socket = getSocket();
-    socket.on('privateMessage', async (message: MessageSchema) => {
-      if (String(message.chatId) === String(chat.chatId)) {
-        setUnreadCount((prev: number) => prev + 1);
-        setLastMessage(message.content);
-      }
-      if (String(message.chatId) === String(selectedChatId)) {
-        setUnreadCount(0);
-        await readChat(chat.chatId);
-      }
-    });
+    if (socket) {
+      socket.on('privateMessage', async (message: MessageSchema) => {
+        if (String(message.chatId) === String(chat.chatId)) {
+          setUnreadCount((prev: number) => prev + 1);
+          setLastMessage(message.content);
+        }
+        if (String(message.chatId) === String(selectedChatId)) {
+          setUnreadCount(0);
+          await readChat(chat.chatId);
+        }
+      });
+    } else {
+      console.log('No socket en contactItem ');
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

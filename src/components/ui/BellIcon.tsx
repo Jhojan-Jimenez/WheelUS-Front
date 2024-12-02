@@ -13,11 +13,16 @@ const BellIcon: React.FC<BellIconProps> = ({
 }) => {
   useEffect(() => {
     const socket = getSocket();
-    socket.on('appNotification', (mes) => {
-      toast.info(mes);
 
-      setNotificationCount((prev) => prev + 1);
-    });
+    if (socket) {
+      socket.on('appNotification', (mes: string) => {
+        toast.info(mes);
+
+        setNotificationCount((prev) => prev + 1);
+      });
+    } else {
+      console.log('Problema con socket en BellIcon');
+    }
   }, []);
   return (
     <div className="relative flex justify-center items-center">

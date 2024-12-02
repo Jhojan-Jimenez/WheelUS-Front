@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { io } from 'socket.io-client';
-let socket;
+let socket: ReturnType<typeof io> | null = null;
 
 export const getSocket = () => {
   if (!socket) {
