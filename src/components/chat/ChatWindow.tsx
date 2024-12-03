@@ -43,7 +43,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   const handleSend = () => {
     if (newMessage.trim()) {
       sendMessage(newMessage);
-      console.log('Sending message:', newMessage);
       setNewMessage('');
     }
   };

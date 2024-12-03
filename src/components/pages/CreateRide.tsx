@@ -57,8 +57,6 @@ export default function CreateRide() {
       }
 
       if (formData.available_seats > (vehicle?.seats ?? 0)) {
-        console.log(vehicle);
-
         Swal.fire({
           title: 'Error!',
           text: `Por favor elije entre 1 a ${vehicle?.seats ?? 0} asientos`,

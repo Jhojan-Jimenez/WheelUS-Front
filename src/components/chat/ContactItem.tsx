@@ -6,6 +6,7 @@ import { getUserById } from '@/lib/api/user';
 import { ChatSchema, MessageSchema, UserSchema } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { BeatLoader } from 'react-spinners';
+import anonym from '@/assets/anonym.png';
 
 export default function ContactItem({
   chat,
@@ -71,7 +72,7 @@ export default function ContactItem({
         ) : (
           <div className="flex items-center">
             <img
-              src={contactUser?.photo}
+              src={contactUser?.photo || anonym}
               alt={contactUser?.name || 'Imagen User'}
               className="w-12 h-12 rounded-full mr-4"
             />

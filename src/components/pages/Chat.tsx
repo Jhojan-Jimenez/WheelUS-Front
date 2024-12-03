@@ -62,8 +62,6 @@ const Chat: React.FC = () => {
         if (selectedChat?.chatId === String(message.chatId)) {
           setMessages((prev) => [...prev, message]);
         }
-
-        console.log('Mensaje recibido:', message);
       });
     } else {
       console.log('Problema socket en chat');

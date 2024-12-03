@@ -11,6 +11,7 @@ import { modifyUser } from '@/lib/api/user';
 import Swal from 'sweetalert2';
 import { isAxiosError } from 'axios';
 import { normalizeValidationBackErrors } from '@/lib/utils';
+import anonym from '@/assets/anonym.png';
 
 export default function Profile() {
   const { user, setUser } = useAuth();
@@ -95,7 +96,7 @@ export default function Profile() {
       >
         <div className="flex flex-1 flex-col justify-center items-center gap-4 rounded-full border-2 border-[#025C31] overflow-hidden w-96 h-96 2xl:w-[500px] 2xl:h-[500px]">
           <img
-            src={photoPreview || user?.photo || '/images/anonym.png'}
+            src={photoPreview || user?.photo || anonym}
             alt="Picture of the author"
             className="w-full h-full object-cover"
           />

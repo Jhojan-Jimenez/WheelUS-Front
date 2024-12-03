@@ -7,7 +7,6 @@ export const getSocket = () => {
   if (!socket) {
     const token = Cookies.get('authToken');
     if (!token) {
-      console.error('Auth token is undefined. Cannot initialize socket.');
       return null;
     }
     socket = io(import.meta.env.VITE_BACKEND_URL, {

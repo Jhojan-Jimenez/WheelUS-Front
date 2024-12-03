@@ -51,6 +51,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (user.vehicle_plate !== undefined && !vehicle) {
           const carData = await getVehicleByPlate(user.vehicle_plate);
           sessionStorage.setItem('vehicle', JSON.stringify(carData));
+          setVehicle(carData);
         }
       }
     };
@@ -65,10 +66,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { authToken, refreshToken } = await authSignup(data);
     Cookies.set('authToken', authToken, {
       path: '/',
+      expires: 1,
       sameSite: 'Strict',
     });
     Cookies.set('refreshToken', refreshToken, {
       path: '/',
+      expires: 7,
       sameSite: 'Strict',
     });
     await setLocalStorageUser(authToken, setUser, setVehicle);
@@ -78,10 +81,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { authToken, refreshToken } = await authSignin({ email, password });
     Cookies.set('authToken', authToken, {
       path: '/',
+      expires: 1,
       sameSite: 'Strict',
     });
     Cookies.set('refreshToken', refreshToken, {
       path: '/',
+      expires: 7,
       sameSite: 'Strict',
     });
     await setLocalStorageUser(authToken, setUser, setVehicle);
@@ -117,6 +122,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const authToken = await authRefreshToken(token);
       Cookies.set('authToken', authToken, {
         path: '/',
+        expires: 1,
         sameSite: 'Strict',
       });
       await setLocalStorageUser(authToken, setUser, setVehicle);

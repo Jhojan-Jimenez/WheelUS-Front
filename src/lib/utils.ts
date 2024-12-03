@@ -46,6 +46,9 @@ export async function reverseGeocodeAndShowMarker(
 
     return formattedAddress;
   } catch (error) {
-    console.log(error);
+    console.log(
+      'Error obteniendo el nombre de un punto por su latitud y longitud: ',
+      error
+    );
   }
 }

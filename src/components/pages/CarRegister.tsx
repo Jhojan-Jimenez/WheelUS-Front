@@ -39,8 +39,6 @@ export default function CarRegister() {
         navigate('/rides');
       }
     } catch (error) {
-      console.log(error);
-
       let validateErros = '';
       if (isAxiosError(error) && error.response?.data?.errors) {
         validateErros = normalizeValidationBackErrors(
