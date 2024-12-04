@@ -1,50 +1,22 @@
-# React + TypeScript + Vite
+# WheelUS - Plataforma de Transporte Universitario 🚗🎓
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**WheelUS** es una plataforma innovadora diseñada para facilitar el transporte entre estudiantes universitarios, permitiendo la creación y reserva de viajes de manera eficiente y personalizada. La aplicación combina una interfaz interactiva con tecnologías avanzadas para ofrecer una experiencia fluida, segura y flexible tanto para pasajeros como para conductores.
 
-Currently, two official plugins are available:
+## 🌟 Características Principales:
+- **Interfaz interactiva basada en mapas**: Los usuarios pueden crear y reservar viajes seleccionando paradas directamente en el mapa mediante **Leaflet** y **OpenStreetMap**.  
+- **Sistema de roles dinámico**: Cambio sencillo entre roles de pasajero y conductor para adaptarse a diferentes necesidades.  
+- **Chat en tiempo real**: Comunicación directa y efectiva entre usuarios a través de **WebSockets**.  
+- **Notificaciones instantáneas**: Alertas en tiempo real para mantener a los usuarios informados en todo momento.  
+- **Sistema de autenticación seguro**: Implementación de **JWT** para garantizar la protección de datos y accesos seguros.  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠️ Tecnologías Utilizadas:
+- **Frontend**: React y TypeScript para una interfaz dinámica y segura.  
+- **Backend**: Node.js y Express, siguiendo el patrón MVC para un código modular y escalable.  
+- **Mapas**: Leaflet y OpenStreetMap para gestión de rutas y selección de paradas.  
+- **Base de Datos**: Firebase para almacenamiento de datos y gestión de imágenes.  
+- **Autenticación**: JWT para un acceso seguro y controlado.  
+- **Comunicación**: WebSockets para chat y notificaciones en tiempo real.  
 
-## Expanding the ESLint configuration
+## 🚀 Demo en Vivo:
+¡Experimenta WheelUS en acción! Visita la demo en vivo aquí: [WheelUS Demo](https://wheel-us-front.vercel.app)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react';
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-});
-```
