@@ -37,6 +37,8 @@ export async function getUserByToken(token: string) {
       Authorization: `Bearer ${token}`,
     },
   };
+  console.log('[DEBUG] setLocalStorageUser llamado');
+  console.trace();
   const res = await api.get('/user/', config);
   return res.data.user;
 }

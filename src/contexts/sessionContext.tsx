@@ -17,6 +17,7 @@ import GeneralLoader from '@/components/modals/GeneralLoader';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { getVehicleByPlate } from '@/lib/api/vehicle';
+import { useRef } from 'react';
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const resActualUser = localStorage.getItem('user');
@@ -26,7 +27,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     ? JSON.parse(resActualUserVehicle)
     : null;
   const navigate = useNavigate();
+
   const [user, _setUser] = useState(actualUser);
+  const [vehicle, setVehicle] = useState<VehicleSchema | null>(
+    actualUserVehicle
+  );
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // 👉 Referencia para evitar múltiples llamadas
+  const hasFetchedUser = useRef(false);
+
   const setUser = useCallback((newUser: typeof user) => {
     _setUser(newUser);
     if (newUser) {
@@ -35,28 +45,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.removeItem('user');
     }
   }, []);
-  const [vehicle, setVehicle] = useState<VehicleSchema | null>(
-    actualUserVehicle
-  );
-  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log('HOLA');
+
     const fetchUser = async () => {
+      if (hasFetchedUser.current) return; // Ya fue ejecutado una vez
+      hasFetchedUser.current = true;
+
       if (!user) {
         const token = Cookies.get('authToken');
         if (token) {
           await setLocalStorageUser(token, setUser, setVehicle);
         }
-      } else {
-        if (user.vehicle_plate !== undefined && !vehicle) {
-          const carData = await getVehicleByPlate(user.vehicle_plate);
-          sessionStorage.setItem('vehicle', JSON.stringify(carData));
-          setVehicle(carData);
-        }
+      } else if (user.vehicle_plate && !vehicle) {
+        const carData = await getVehicleByPlate(user.vehicle_plate);
+        sessionStorage.setItem('vehicle', JSON.stringify(carData));
+        setVehicle(carData);
       }
     };
+
     fetchUser();
-  }, [user]);
+  }, []);
 
   if (loading) {
     return <GeneralLoader message="Cargando información..." />;

@@ -21,7 +21,7 @@ const NotificationDropdown: React.FC = () => {
       setNotificationCount(res.length);
     };
     fetchData();
-  }, [notifications]);
+  }, []);
 
   return (
     <div className="relative">
